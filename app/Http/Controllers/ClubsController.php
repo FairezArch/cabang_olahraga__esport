@@ -1,0 +1,161 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Club;
+use Illuminate\Support\Facades\Validator;
+use DB;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Branchsport;
+
+class ClubsController extends Controller
+{
+    public function __construct()
+    {
+        # code...
+        $this->middleware(['permission:clubs-list|clubs-create|clubs-edit|clubs-delete']);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+        $lists = Club::where('cabang_id',auth::user()->cabang_id)->paginate(5);
+        return view('pages.clubs.index',compact('lists'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+        // $users = User::where('active',1)->get();
+        $users = DB::table('users')->join('model_has_roles','users.id','model_has_roles.model_id')
+                ->select('users.*','model_has_roles.role_id','model_has_roles.model_id')
+                ->where('model_has_roles.role_id',3)->paginate(5);
+        $branchs = Branchsport::get();
+        return view('pages.clubs.add',compact('users','branchs'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        
+        $rules = [
+            'user' => 'required|integer',
+            'clubname' => 'required',
+        ];
+  
+        $messages = [
+            'user.required'       => 'Nama event wajib diisi',
+            'clubname.required'     => 'Nama Club wajib diisi',
+        ];
+
+        $validator = Validator::make($request->all(),$rules,$messages);
+
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        Club::create([
+            'iduser' => $request->user,
+            'club_name' => $request->clubname,
+            'cabang_id' => $request->branch
+        ]);
+
+        return redirect()->route('clubs.index')
+        ->with('success','Club create successfully');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        
+        $club = Club::find($id);
+        $users = User::where('active',1)->get();
+        $branchs = Branchsport::get();
+        return view('pages.clubs.edit',compact('club','users','branchs'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+        $rules = [
+            'user' => 'required|integer',
+            'clubname' => 'required',
+        ];
+  
+        $messages = [
+            'user.required'       => 'Nama event wajib diisi',
+            'clubname.required'     => 'Nama Club wajib diisi',
+        ];
+
+        $validator = Validator::make($request->all(),$rules,$messages);
+
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $club = Club::find($id);
+
+        $club->update([
+            'iduser' => $request->user,
+            'club_name' => $request->clubname,
+            'cabang_id' => $request->branch
+        ]);
+
+        return redirect()->route('clubs.index')
+        ->with('success','Club updated successfully');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+        Club::find($id)->delete();
+        return redirect()->route('clubs.index')
+        ->with('success','Club deleted successfully');
+    }
+}

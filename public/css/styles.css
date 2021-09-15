@@ -1,0 +1,184 @@
+
+/* Google Font Include */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap');
+
+/*=============== Normalization Style ==============*/
+body{
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    line-height: 1;
+    padding: 0;
+    margin: 0
+}  
+h1,h2,h3,h4,h5,h6{
+    margin: 0;
+    padding: 0;
+    line-height: .9;
+    font-weight: 700;
+    color: #34374c;
+}
+p{
+    font-size: 16px;
+    font-weight: 300;
+    color: #3f4360;
+    line-height: 1.2222;
+}
+ul, ol, li{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+a, a:hover,a:focus{
+    display: inline-block;
+    outline: none;
+    text-decoration: none;
+}
+a:hover,a:focus{
+    color: inherit;
+}
+a{
+    -webkit-transition: all 700ms ease;
+    -moz-transition: all 700ms ease;
+    -ms-transition: all 700ms ease;
+    -o-transition: all 700ms ease;
+    transition: all 700ms ease;
+}
+img{
+    width: 100%;
+    height: auto;
+}
+/*=============== Start Wrapper Style ==============*/
+.wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background: #f2f2f2;
+}
+.login-thumb{
+    width: calc(100% - 600px);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    background-attachment: fixed;
+}
+.login-form{
+    width: 600px;
+    min-height: 100vh;
+    display: block;
+    background-color:#f7f7f7;
+    padding: 8rem 6rem;
+}
+.login-form-title {
+    width: 100%;
+    display: block;
+    font-size: 30px;
+    color: #444;
+    line-height: 1.2;
+    text-align: center;
+    margin-bottom: 40px;
+}
+.login-form .form-group label{
+    color: #444;
+    font-size: 14px;
+    font-weight: 400;
+}
+.forgo-remember{
+    display: flex;
+    justify-content: space-between;
+    -ms-align-items: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 40px;
+}
+.forgo-remember .form-check-input{
+    top: -1px;
+}
+.custom-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+    height: 50px;
+    border-radius: 0.25rem;
+    font-size: 14px;
+    color:#fff;
+    line-height: 1.2;
+    text-transform: uppercase;
+    -webkit-transition: all .4s;
+    -o-transition: all .4s;
+    -moz-transition: all .4s;
+    transition: all .4s;
+}
+.or{
+    display: block;
+    font-size: 30px;
+    color: #333;
+    line-height: 1.2;
+    text-align: center;
+    padding: 30px 0;
+}
+.social-login{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.social-login a.social-item {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    color: #fff;
+    border-radius: 50%;
+    display: block;
+    text-align: center;
+    line-height: 36px;
+    margin: 0 5px;
+}
+.facebook-color{
+    background-color: #3b5999;
+}
+.twitter-color{
+    background-color: #55acee;
+}
+.google-color{
+    background-color: #dd4b39;
+}
+.pinterest-color{
+    background-color: #bd081c;
+}
+
+/*=============== Start Responsive Style ==============*/
+@media only screen and (min-width:768px) and (max-width:1024px) {
+    .login-thumb{
+        width: calc(100% - 500px);
+    }
+    .login-form {
+        width: 500px;
+        padding: 5rem 4rem;
+    }
+}
+@media only screen and (min-width:1024px) and (max-width:1440px) {
+    .login-thumb{
+        width: calc(100% - 500px);
+    }
+    .login-form {
+        width: 500px;
+        padding: 4rem 5rem;
+    }
+}
+
+@media only screen and (min-width:0) and (max-width:768px) {
+    .login-thumb{
+        display: none;
+    }
+    .login-form {
+        width: 100%;
+        padding: 5rem 2rem;
+    }
+}
