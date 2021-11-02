@@ -10,5 +10,5 @@ class Member extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable=['iduser','status'];
+    protected $fillable=['iduser','club_id'];
 }

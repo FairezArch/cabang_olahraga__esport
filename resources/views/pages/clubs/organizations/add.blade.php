@@ -1,10 +1,10 @@
 @extends('master')
-@section('title', '- Member')
+@section('title', '- Pengurus Club')
 @section('content')
 <div class="container-fluid">
     <div class="shadow-sm p-3 mb-5 bg-white rounded">
-        <h2>Tambah Member</h2>
-        <form method="POST" action="{{route('members.store')}}" enctype="multipart/form-data">
+        <h2>Tambah Pengurus</h2>
+        <form method="POST" action="{{url('clubs/'.$club_id.'/organizations/store')}}" enctype="multipart/form-data">
             @csrf
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -55,14 +55,14 @@
                 </select>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="file">Foto Profile</label>
                     <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file">
                     @error('file')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="filektp">Foto KTP</label>
                     <input type="file" class="form-control @error('filektp') is-invalid @enderror" id="filektp" name="filektp">
                     @error('filektp')
@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="button-grup">
-                <a href="{{route('members.index')}}" class="btn btn-danger m-1">Back</a>
+                <a href="{{url('clubs/'.$club_id.'/organizations')}}" class="btn btn-danger m-1">Back</a>
                 <button type="submit" class="btn btn-primary m-1">Save</button>
             </div>
         </form>

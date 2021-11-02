@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Club extends Model
 {
     use HasFactory,SoftDeletes;
-    protected $fillable=['iduser','club_name','cabang_id'];
+    protected $fillable=['iduser','club_name','slug','cabang_id','file','description','teams'];
 }

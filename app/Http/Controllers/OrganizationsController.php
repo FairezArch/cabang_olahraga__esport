@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
+use DB;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\TeamModel;
 use App\Models\EventOrganizations;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
-use DB;
-use Illuminate\Support\Str;
 use App\Models\Branchsport;
-use Illuminate\Support\Facades\Auth;
 
 class OrganizationsController extends Controller
 {
@@ -20,7 +22,6 @@ class OrganizationsController extends Controller
     {
         # code...
         $this->middleware(['permission:organizations-list|organizations-create|organizations-edit|organizations-delete']);
-        $this->middleware(['permission:organizations-event-list|organizations-event-create|organizations-event-edit|organizations-event-delete']);
     }
 
     /**
@@ -28,11 +29,19 @@ class OrganizationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($club_id)
     {
         # code...
-        $lists = Organization::where('cabang_id',auth::user()->cabang_id)->paginate(5);
-        return view('pages.organizations.index',compact('lists'));
+        $lists = DB::table('origanizations')
+                ->join('clubs','origanizations.club_id','clubs.id')  
+                ->join('users','origanizations.user_id','users.id')
+                ->select('origanizations.id','users.id as user_id','clubs.iduser as club_iduser','users.cabang_id','users.name',
+                        'users.lastname','users.address','users.no_ktp','users.profile_ktp','users.profile_pic','users.email')
+                ->where('origanizations.club_id',$club_id)
+                ->where('origanizations.cabang_id',auth::user()->cabang_id)
+                ->whereNull('origanizations.deleted_at')
+                ->paginate(5);
+        return view('pages.clubs.organizations.index',compact('lists','club_id'));
     }
 
     /**
@@ -40,15 +49,16 @@ class OrganizationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($club_id)
     {
         # code...
+        
         $users = DB::table('users')->join('model_has_roles','users.id','model_has_roles.model_id')
                 ->select('users.*','model_has_roles.role_id','model_has_roles.model_id')
                 ->where('model_has_roles.role_id',4)->paginate(5);
         $teams = TeamModel::get();
         $branchs = Branchsport::get();
-        return view('pages.organizations.add',compact('users','teams','branchs'));
+        return view('pages.clubs.organizations.add',compact('users','teams','branchs','club_id'));
     }
 
     /**
@@ -57,21 +67,28 @@ class OrganizationsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $club_id)
     {
         # code...
         $rules = [
-            'organizations' => 'required|min:3',
-            'pengurus'  => 'required|integer',
-            'listeam'  => 'required|array',
-            
+            'firstname' => 'required|min:3',
+            'lastname'  => 'required|min:3',
+            'email'     => 'required|email|unique:users',
+            'pass'      => 'required|min:3',
+            'file'      => 'required|file|mimes:jpg,jpeg,bmp,png',
+            'filektp'   => 'required|file|mimes:jpg,jpeg,bmp,png'
         ];
   
         $messages = [
-            'organizations.required'  => 'Organization wajib diisi',
-            'organizations.min'       => 'Organization minimal 3 karakter',
-            'pengurus.required'       => 'Pengurus harap dipilih',
-            'listeam.required'        => 'Tim harap dipilih',
+            'firstname.required'  => 'Firstname wajib diisi',
+            'firstname.min'       => 'Firstname minimal 3 karakter',
+            'lastname.required'  => 'Lastname wajib diisi',
+            'lastname.min'       => 'Lastname minimal 3 karakter',
+            'email.required' => 'Email wajib diisi',
+            'pass.required'  => 'Password wajib diisi',
+            'pass.min'       => 'Password minimal 3 karakter',
+            'file.required'  => 'Foto profile wajib diupload',
+            'filektp.required'  => 'Foto KTP wajib diupload'
         ];
 
         $validator = Validator::make($request->all(),$rules,$messages);
@@ -79,17 +96,39 @@ class OrganizationsController extends Controller
         if($validator->fails()){
             return redirect()->back()->withErrors($validator)->withInput();
         }
+          
+        $namefile = str_replace(' ','_',pathinfo($request->file->getClientOriginalName(),PATHINFO_FILENAME));
+        $filename  = $namefile.'_'.time().'.'.$request->file->extension();  
+        $request->file->move(public_path('uploads'), $filename);
 
-        $teams = json_encode($request->listeam);
+        $namefile1= str_replace(' ','_',pathinfo($request->filektp->getClientOriginalName(),PATHINFO_FILENAME));
+        $filename1  = $namefile1.'_'.time().'.'.$request->filektp->extension();  
+        $request->filektp->move(public_path('uploads'), $filename1);
+
+        $role = Role::find(4);
+        $user = User::create([
+            'name'=>$request->firstname,
+            'lastname'=>$request->lastname,
+            'email'=>$request->email,
+            'password'=>Hash::make($request->pass),
+            'no_ktp'=>$request->ktp,
+            'address'=>$request->address,
+            'profile_pic'=>$filename,
+            'profile_ktp'=>$filename1,
+            'active'=>99,
+            'active_member'=>0,
+            'cabang_id'=>$request->branch
+        ]);
+        $user->assignRole($role->name);
+
+        // $teams = json_encode($request->listeam);
         Organization::create([
-            'name_club' => $request->organizations,
-            'owner_club' => $request->pengurus,
-            'desc' => $request->desc,
-            'team_name' => $teams,
+            'club_id' => $club_id,
+            'user_id' => $user->id,
             'cabang_id'=>$request->branch
         ]);
 
-        return redirect()->route('organizations.index')
+        return redirect()->to('clubs/'.$club_id.'/organizations')
         ->with('success','Organizations create successfully');
     }
 
@@ -110,17 +149,17 @@ class OrganizationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($club_id, $id)
     {
         # code...
         $organization = Organization::find($id);
-        $users = User::where('active',1)->get();
-        $teams = TeamModel::get();
-        $memberarr = [];
-        $de = json_decode($organization->team_name);
-        foreach($de as $member){$memberarr[] = $member;} 
+        $user = User::find($organization->user_id);
+        // $teams = TeamModel::get();
+        // $memberarr = [];
+        // $de = json_decode($organization->team_name);
+        // foreach($de as $member){$memberarr[] = $member;} 
         $branchs = Branchsport::get();
-        return view('pages.organizations.edit',compact('organization','users','teams','memberarr','branchs'));
+        return view('pages.clubs.organizations.edit',compact('organization','user','branchs','club_id'));
     }
 
     /**
@@ -130,21 +169,21 @@ class OrganizationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $club_id, $id)
     {
         # code...
         $rules = [
-            'organizations' => 'required|min:3',
-            'pengurus'  => 'required|integer',
-            'listeam'  => 'required|array',
-            
+            'firstname' => 'required|min:3',
+            'lastname'  => 'required|min:3',
+            'email'     => 'required|email|unique:users,email,'.$id,
         ];
   
         $messages = [
-            'organizations.required'  => 'Organization wajib diisi',
-            'organizations.min'       => 'Organization minimal 3 karakter',
-            'pengurus.required'       => 'Pengurus harap dipilih',
-            'listeam.required'        => 'Tim harap dipilih',
+            'firstname.required'  => 'Firstname wajib diisi',
+            'firstname.min'       => 'Firstname minimal 3 karakter',
+            'lastname.required'  => 'Lastname wajib diisi',
+            'lastname.min'       => 'Lastname minimal 3 karakter',
+            'email.required' => 'Email wajib diisi',
         ];
 
         $validator = Validator::make($request->all(),$rules,$messages);
@@ -153,17 +192,54 @@ class OrganizationsController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $teams = json_encode($request->listeam);
+        // $teams = json_encode($request->listeam);
         $organ = Organization::find($id);
-        $organ->update([
-            'name_club' => $request->organizations,
-            'owner_club' => $request->pengurus,
-            'desc' => $request->desc,
-            'team_name' => $teams,
+        $user = User::find($organ->user_id);
+
+        $filename = $user->profile_pic;
+        $filename1 = $user->profile_ktp;
+
+        if(!empty($request->file)){
+            File::delete(public_path("uploads/".$user->profile_pic));
+            $namefile = str_replace(' ','_',pathinfo($request->file->getClientOriginalName(),PATHINFO_FILENAME));
+            $filename  = $namefile.'_'.time().'.'.$request->file->extension();  
+            $request->file->move(public_path('uploads'), $filename);
+        }
+
+        if(!empty($request->filektp)){
+            File::delete(public_path("uploads/".$user->profile_ktp));
+            $namefile1= str_replace(' ','_',pathinfo($request->filektp->getClientOriginalName(),PATHINFO_FILENAME));
+            $filename1  = $namefile1.'_'.time().'.'.$request->filektp->extension();  
+            $request->filektp->move(public_path('uploads'), $filename1);
+        }
+
+        if(empty($request->pass)){
+            $pass = $user->password;
+        }else{
+            $pass = Hash::make($request->pass);
+        }
+
+        $user->update([
+            'name'=>$request->firstname,
+            'lastname'=>$request->lastname,
+            'email'=>$request->email,
+            'password'=>$pass,
+            'no_ktp'=>$request->ktp,
+            'address'=>$request->address,
+            'profile_pic'=>$filename,
+            'profile_ktp'=>$filename1,
+            'active'=>99,
+            'active_member'=>0,
             'cabang_id'=>$request->branch
         ]);
 
-        return redirect()->route('organizations.index')
+        $organ->update([
+            'club_id' => $club_id,
+            'user_id' => $user->id,
+            'cabang_id'=>$request->branch
+        ]);
+
+        return redirect()->to('clubs/'.$club_id.'/organizations')
         ->with('success','Organizations updated successfully');
     }
 
@@ -173,16 +249,22 @@ class OrganizationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($club_id, $id)
     {
         # code...
-        $event = EventOrganizations::where('idorganization',$id)->get();
-        if(!empty($event)){
-            EventOrganizations::where('idorganization',$id)->delete();
-        }
-        Organization::find($id)->delete();
-        return redirect()->route('organizations.index')
-                        ->with('success','Organizations deleted successfully');
+        // $event = EventOrganizations::where('idorganization',$id)->get();
+        // if(!empty($event)){
+        //     EventOrganizations::where('idorganization',$id)->delete();
+        // }
+        
+        $org = Organization::find($id);
+        $user= User::find($org->user_id);
+        DB::table('model_has_roles')->where('model_id',$org->user_id)->delete();
+        $user->delete();
+        $org->delete();
+
+        return redirect()->to('clubs/'.$club_id.'/organizations')
+        ->with('success','Organizations deleted successfully');
     }
 
     public function eventindex($idorg)

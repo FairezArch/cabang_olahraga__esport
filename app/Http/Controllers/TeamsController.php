@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use DB;
 use App\Models\TeamModel;
 use App\Models\GamesModel;
-use Illuminate\Support\Facades\File;
-use DB;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Branchsport;
-use Illuminate\Support\Facades\Auth;
 
 class TeamsController extends Controller
 {
@@ -24,11 +24,10 @@ class TeamsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($club_id)
     {
-        
-        $teams = TeamModel::where('cabang_id',auth::user()->cabang_id)->paginate(7);
-        return view('pages.teams.index',compact('teams'));
+        $teams = TeamModel::where('cabang_id',auth::user()->cabang_id)->where('club_id',$club_id)->paginate(7);
+        return view('pages.clubs.teams.index',compact('teams','club_id'));
     }
 
     /**
@@ -36,19 +35,21 @@ class TeamsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($club_id)
     {
 
         $members = DB::table('users')
                     ->join('members','users.id','members.iduser')
-                    ->select('users.*','members.status','members.iduser as member_user')
+                    ->join('clubs','members.club_id','clubs.id')
+                    ->select('users.*','members.iduser as member_user')
+                    ->where('clubs.id', $club_id)
                     ->where('users.active',1)
-                    ->where('members.status',1)
                     ->where('members.deleted_at',null)
                     ->get();
         $games = GamesModel::get();
         $branchs = Branchsport::get();
-        return view('pages.teams.add',compact('members','games','branchs'));
+       
+        return view('pages.clubs.teams.add',compact('members','games','branchs','club_id'));
     }
 
     /**
@@ -57,7 +58,7 @@ class TeamsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $club_id)
     {
         
         $rules = [
@@ -115,11 +116,13 @@ class TeamsController extends Controller
             'games'=>$request->listgame,
             'members'=>$encode,
             'leader_team'=>$request->leader,
+            'club_id'=>$club_id,
             'cabang_id'=>$request->branch
         ]);
 
-        return redirect()->route('teams.index')
+        return redirect()->to('clubs/'.$club_id.'/teams')
         ->with('success','Team created successfully');
+        
     }
 
     /**
@@ -139,23 +142,25 @@ class TeamsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($club_id,$id)
     {
         //
         $team = TeamModel::find($id);
         $games = GamesModel::get();
         $members = DB::table('users')
                     ->join('members','users.id','members.iduser')
-                    ->select('users.*','members.status','members.iduser as member_user')
+                    ->join('clubs','members.club_id','clubs.id')
+                    ->select('users.*','members.iduser as member_user')
                     ->where('users.active',1)
-                    ->where('members.status',1)
+                    ->where('clubs.id', $club_id)
                     ->where('members.deleted_at',null)
                     ->get();
         $memberarr = [];
         $de = json_decode($team->members);
         foreach($de as $member){$memberarr[] = $member;}  
         $branchs = Branchsport::get();   
-        return view('pages.teams.edit', compact('team','games','members','memberarr','branchs'));
+
+        return view('pages.clubs.teams.edit', compact('team','games','members','memberarr','branchs','club_id'));
     }
 
     /**
@@ -165,7 +170,7 @@ class TeamsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $club_id, $id)
     {
         $rules = [
             'nameteam'  => 'required|min:3',
@@ -223,11 +228,12 @@ class TeamsController extends Controller
             'games'=>$request->listgame,
             'members'=>$encode,
             'leader_team'=>$request->leader,
+            'club_id'=>$club_id,
             'cabang_id'=>$request->branch
         ]);
 
-        return redirect()->route('teams.index')
-        ->with('success','Team updated successfully');
+        return redirect()->to('clubs/'.$club_id.'/teams')
+        ->with('success','Team created successfully');
     }
 
     /**
@@ -236,11 +242,11 @@ class TeamsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($club_id,$id)
     {
         //
         TeamModel::find($id)->delete();
-        return redirect()->route('teams.index')
+        return redirect()->to('clubs/'.$club_id.'/teams')
                         ->with('success','Team deleted successfully');
     }
 }

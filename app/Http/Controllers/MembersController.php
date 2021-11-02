@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\Member;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\File;
-use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Branchsport;
 use Illuminate\Support\Facades\Auth;
+use DB;
+use App\Models\User;
+use App\Models\Member;
+use App\Models\Branchsport;
+use App\Models\RequestMembers;
 
 class MembersController extends Controller
 {
@@ -26,19 +27,21 @@ class MembersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($club_id)
     {
         //
         $lists = DB::table('users')
-            ->join('members', 'users.id', 'members.iduser')
+        ->join('members', 'users.id', 'members.iduser')
+        ->join('clubs','members.club_id','clubs.id')
             ->select('users.*', 'members.*', 'members.id as member_id')
+            ->where('clubs.id', $club_id)
             ->where('users.active_member', 1)
-            ->where('members.status', 1)
-            ->where('members.deleted_at', null)
-            ->where('cabang_id',auth::user()->cabang_id)
+            ->whereNull('members.deleted_at')
+            ->where('clubs.cabang_id',auth::user()->cabang_id)
             ->paginate(5);
         // $lists = Member::paginate(5);
-        return view('pages.members.index', compact('lists'));
+        // return dd($lists);
+        return view('pages.clubs.members.index', compact('lists','club_id'));
     }
 
     /**
@@ -46,11 +49,12 @@ class MembersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($club_id)
     {
         //
         $branchs = Branchsport::get();
-        return view('pages.members.add',compact('branchs'));
+        // return dd(compact('branchs','club_id'));
+        return view('pages.clubs.members.add',compact('branchs','club_id'));
     }
 
     /**
@@ -59,9 +63,10 @@ class MembersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $club_id)
     {
         //
+        // return dd($club_id);
         $rules = [
             'firstname' => 'required|min:3',
             'lastname'  => 'required|min:3',
@@ -114,12 +119,12 @@ class MembersController extends Controller
         $insertid = $user->id;
         Member::create([
             'iduser' => $insertid,
-            'status' => 1,
+            'club_id' => $club_id,
         ]);
         $user->assignRole($role->name);
 
-        return redirect()->route('members.index')
-            ->with('success', 'member created successfully');
+        return redirect()->to('clubs/'.$club_id.'/members')
+        ->with('success','Member created successfully');
     }
 
     /**
@@ -139,13 +144,13 @@ class MembersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($club_id,$id)
     {
         //
         $member = Member::find($id);
         $user = User::find($member->iduser);
         $branchs = Branchsport::get();
-        return view('pages.members.edit', compact('user','branchs'));
+        return view('pages.clubs.members.edit', compact('user','branchs','club_id'));
     }
 
     /**
@@ -155,7 +160,7 @@ class MembersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $club_id, $id)
     {
         // return dd($id);
         $rules = [
@@ -218,8 +223,8 @@ class MembersController extends Controller
             'cabang_id'=>$request->branch
         ]);
 
-        return redirect()->route('members.index')
-            ->with('success', 'member updated successfully');
+        return redirect()->to('clubs/'.$club_id.'/members')
+        ->with('success','Member updated successfully');
     }
 
     /**
@@ -228,7 +233,7 @@ class MembersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($club_id, $id)
     {
         //
         $member = Member::find($id);
@@ -238,14 +243,15 @@ class MembersController extends Controller
         $user->assignRole($role->name);
         $user->update(['active_member' => 0]);
         $member->delete();
-        return redirect()->route('members.index')
-            ->with('success', 'Member deleted successfully');
+
+        return redirect()->to('clubs/'.$club_id.'/members')
+        ->with('success','Member deleted successfully');
     }
 
     public function mail()
     {
         # code...
-        return view('pages.members.sendmail');
+        return view('pages.clubs.members.sendmail');
     }
 
     public function sendmail(Request $request)
@@ -266,28 +272,78 @@ class MembersController extends Controller
             ->with('success', 'Members send successfully');
     }
 
-    public function selectmember()
+    public function selectmember($club_id)
     {
         # code...
+        // $lists = User::join('members','users.id')
         $lists = User::where('active', 1)->where('active_member', 0)->get();
         $branchs = Branchsport::get();
-        return view('pages.members.select', compact('lists','branchs'));
+        return view('pages.clubs.members.select', compact('lists','branchs','club_id'));
     }
 
-    public function directjoin(Request $request)
+    public function directjoin(Request $request, $club_id)
     {
         # code...
         Member::create([
             'iduser' => $request->selectuser,
-            'status' => 1,
+            'club_id' => $club_id,
         ]);
+
         $role = Role::find(5);
         $user = User::find($request->selectuser);
         $user->update(['active_member' => 1,'cabang_id'=>$request->branch]);
         DB::table('model_has_roles')->where('model_id', $user->id)->delete();
         $user->assignRole($role->name);
+        
+        return redirect()->to('clubs/'.$club_id.'/members')
+        ->with('success','Members has been join to member');
+    }
 
-        return redirect()->route('members.index')
-            ->with('success', 'Members has been join to member');
+    public function requestmember($club_id)
+    {
+        # code...
+        // $lists = RequestMembers::where('club_id',$club_id)
+        //         ->where('approve',0)
+        //         ->whereNull('deleted_at')->paginate(5);
+        $lists = DB::table('request_members')
+                ->join('users','request_members.user_id','users.id')
+                ->select('users.*','users.id as user_id','request_members.*')
+                ->where('request_members.approve',0)
+                ->whereNull('request_members.deleted_at')->paginate(5);
+        // return dd($lists);
+        return view('pages.clubs.members.request',compact('lists','club_id'));
+    }
+
+    public function requestmemberapprove($club_id,$id)
+    {
+        # code...
+        // return dd($club_id);
+        $requestmembers = RequestMembers::find($id);
+        $user_id = $requestmembers->user_id;
+        
+        Member::create([
+            'iduser' => $user_id,
+            'club_id' => $club_id,
+        ]);
+       
+        $role = Role::find(5);
+        $user = User::find($user_id);
+        $user->update(['active_member' => 1]);
+        DB::table('model_has_roles')->where('model_id', $user->id)->delete();
+        $user->assignRole($role->name);
+
+        $requestmembers->update(['approve'=>1]);
+
+        return redirect()->to('clubs/'.$club_id.'/members/request')
+        ->with('success','Approve member request successfully');
+
+    }
+
+    public function requestmemberdelete($club_id, $id)
+    {
+        # code...
+        RequestMembers::find($id)->delete();
+        return redirect()->to('clubs/'.$club_id.'/members/request')
+        ->with('success','Rejected member request');
     }
 }

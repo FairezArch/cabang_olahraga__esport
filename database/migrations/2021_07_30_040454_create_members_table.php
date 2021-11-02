@@ -16,7 +16,7 @@ class CreateMembersTable extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->id();
             $table->integer('iduser');
-            $table->integer('status');
+            $table->integer('club_id');
             $table->timestamps();
             $table->softDeletes();
         });

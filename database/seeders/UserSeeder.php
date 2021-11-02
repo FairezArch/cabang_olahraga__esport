@@ -20,7 +20,8 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@example.id',
             'password' => bcrypt('123123'),
-            'active' => 99
+            'active' => 99,
+            'cabang_id' => 1
         ]);
 
         $admin->assignRole('superadmin');
@@ -29,7 +30,8 @@ class UserSeeder extends Seeder
             'name' => 'BOD',
             'email' => 'bod@example.id',
             'password' => bcrypt('123123'),
-            'active' => 99
+            'active' => 99,
+            'cabang_id' => 1
         ]);
 
         $bod->assignRole('Club Owner/BOD');
@@ -38,7 +40,8 @@ class UserSeeder extends Seeder
             'name' => 'org_member',
             'email' => 'org_member@example.id',
             'password' => bcrypt('123123'),
-            'active' => 99
+            'active' => 99,
+            'cabang_id' => 1
         ]);
 
         $org_member->assignRole('Organization members');
@@ -47,7 +50,8 @@ class UserSeeder extends Seeder
             'name' => 'club_member',
             'email' => 'club_member@example.id',
             'password' => bcrypt('123123'),
-            'active' => 99
+            'active' => 99,
+            'cabang_id' => 1
         ]);
 
         $club_member->assignRole('Club Members');
@@ -56,7 +60,8 @@ class UserSeeder extends Seeder
             'name' => 'ev_org',
             'email' => 'ev_org@example.id',
             'password' => bcrypt('123123'),
-            'active' => 99
+            'active' => 99,
+            'cabang_id' => 1
         ]);
 
         $ev_org->assignRole('Event Organization');
@@ -65,7 +70,8 @@ class UserSeeder extends Seeder
             'name' => 'User',
             'email' => 'user@example.id',
             'password' => bcrypt('123123'),
-            'active' => 1
+            'active' => 1,
+            'cabang_id' => 1
         ]);
 
         $user->assignRole('user');

@@ -21,6 +21,7 @@ use App\Http\Controllers\HeaderFormController;
 use App\Http\Controllers\UsersNoMember;
 use App\Http\Controllers\ResponsesController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\InfoClubController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,8 +33,8 @@ use App\Http\Controllers\FrontendController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/',[FrontendController::class,'index']);
-Route::get('/login',[LoginController::class,'index'])->name('login');
+// Route::get('/',[FrontendController::class,'index']);
+Route::get('/',[LoginController::class,'index'])->name('login');
 Route::post('/tologin',[LoginController::class,'login'])->name('tologin');
 
 Route::get('register',[RegisterMember::class,'index'])->name('register.member');
@@ -47,9 +48,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('dasboard/event/{slug}',[DashboardController::class,'eventview']);
         Route::get('dasboard/game/{slug}',[DashboardController::class,'gameview']);
         Route::get('dasboard/award/{slug}',[DashboardController::class,'awardview']);
+        Route::get('dashboard/joinClub/{slug}',[DashboardController::class,'joinclub']);
+        Route::post('dashboard/joinClub/{slug}/insert',[DashboardController::class,'joinclubInsert']);
     });
     
-    Route::group(['middleware' => 'role:Superadmin'], function(){
+    Route::group(['middleware' => 'role:superadmin'], function(){
         Route::group(['middleware' => ['permission:admins-list|admins-create|admins-edit|admins-delete']], function(){
             Route::get('admins',[UsersController::class,'index'])->name('admins');
             Route::get('admins/add',[UsersController::class,'create'])->name('admins.add');
@@ -87,15 +90,31 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['middleware' => ['permission:members-list|members-create|members-edit|members-delete']], function(){
-        Route::get('members/mail',[MembersController::class,'mail'])->name('members.mail');
-        Route::post('members/mailsend',[MembersController::class,'sendmail'])->name('members.sendmail');
-        Route::get('members/select',[MembersController::class,'selectmember'])->name('members.direct');
-        Route::post('members/selectadd',[MembersController::class,'directjoin'])->name('members.selectadd');
-        Route::resource('members',MembersController::class);
+        Route::get('clubs/{club_id}/members/mail',[MembersController::class,'mail']);
+        Route::post('clubs/{club_id}/members/mailsend',[MembersController::class,'sendmail']);
+        
+        Route::get('clubs/{club_id}/members/select',[MembersController::class,'selectmember']);
+        Route::post('clubs/{club_id}/members/selectadd',[MembersController::class,'directjoin']);
+
+        Route::get('clubs/{club_id}/members/request',[MembersController::class,'requestmember']);
+        Route::post('clubs/{club_id}/members/request/approve/{id}',[MembersController::class,'requestmemberapprove']);
+        Route::post('clubs/{club_id}/members/request/delete/{id}',[MembersController::class,'requestmemberdelete']);
+
+        Route::get('clubs/{club_id}/members',[MembersController::class,'index']);
+        Route::get('clubs/{club_id}/members/create',[MembersController::class,'create']);
+        Route::post('clubs/{club_id}/members/store',[MembersController::class,'store']);
+        Route::get('clubs/{club_id}/members/edit/{id}',[MembersController::class,'edit']);
+        Route::put('clubs/{club_id}/members/update/{id}',[MembersController::class,'update']);
+        Route::delete('clubs/{club_id}/members/delete/{id}',[MembersController::class,'destroy']);
     });
 
     Route::group(['middleware' => ['permission:teams-list|teams-create|teams-edit|teams-delete']], function(){
-        Route::resource('teams',TeamsController::class);
+        Route::get('clubs/{club_id}/teams',[TeamsController::class,'index']);
+        Route::get('clubs/{club_id}/teams/create',[TeamsController::class,'create']);
+        Route::post('clubs/{club_id}/teams/store',[TeamsController::class,'store']);
+        Route::get('clubs/{club_id}/teams/edit/{id}',[TeamsController::class,'edit']);
+        Route::put('clubs/{club_id}/teams/update/{id}',[TeamsController::class,'update']);
+        Route::delete('clubs/{club_id}/teams/delete/{id}',[TeamsController::class,'destroy']);
     });
 
     Route::group(['middleware' => ['permission:awards-list|awards-create|awards-edit|awards-delete']], function(){
@@ -115,15 +134,21 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['middleware' => ['permission:organizations-list|organizations-create|organizations-edit|organizations-delete']], function(){
-        Route::resource('organizations',OrganizationsController::class);
+        Route::get('clubs/{club_id}/organizations',[OrganizationsController::class,'index']);
+        Route::get('clubs/{club_id}/organizations/create',[OrganizationsController::class,'create']);
+        Route::post('clubs/{club_id}/organizations/store',[OrganizationsController::class,'store']);
+        Route::get('clubs/{club_id}/organizations/edit/{id}',[OrganizationsController::class,'edit']);
+        Route::put('clubs/{club_id}/organizations/update/{id}',[OrganizationsController::class,'update']);
+        Route::delete('clubs/{club_id}/organizations/delete/{id}',[OrganizationsController::class,'destroy']);
     });
 
     Route::get('profile',[ProfilesController::class,'index'])->name('profile.show');
     Route::put('profile/{id}/update',[ProfilesController::class,'update'])->name('profile.update');
     Route::resource('responses',ResponsesController::class);
-    Route::group(['middleware' => 'role:Superadmin'], function(){
+    Route::group(['middleware' => 'role:superadmin'], function(){
         Route::resource('branchs',BranchSportController::class);
     });
+    Route::get('infoclub',[InfoClubController::class,'index']);
     Route::resource('forms',HeaderFormController::class);
     Route::group(['middleware' => ['permission:users-list|users-create|users-edit|users-delete']], function(){
         Route::resource('users',UsersNoMember::class);

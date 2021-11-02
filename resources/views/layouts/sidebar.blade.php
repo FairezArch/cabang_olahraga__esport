@@ -4,7 +4,7 @@
             <a href="{{route('dashboard')}}">
                 <span class="icon material-icons md-light">sports</span>
                 <span class="title-bar">
-                    <h2>ESPORT</h2>
+                    <h2>KONI</h2>
                 </span>
             </a>
         </li>
@@ -19,7 +19,7 @@
         </li>
     </ul>
     @endcan
-    @role('Superadmin')
+    @role('superadmin')
     <ul>
         <li class="{{set_active('branchs*')}}">
             <a href="{{route('branchs.index')}}">
@@ -38,27 +38,6 @@
         </li>
     </ul>
     @endrole
-
-    @can('teams-list')
-    <ul>
-        <li class="{{set_active('teams*')}}">
-            <a href="{{route('teams.index')}}">
-                <span class="icon material-icons md-light">groups</span>
-                <span class="title-bar">Teams</span>
-            </a>
-        </li>
-    </ul>
-    @endcan
-    @can('members-list')
-    <ul>
-        <li class="{{set_active('members*')}}">
-            <a href="{{route('members.index')}}">
-                <span class="icon material-icons md-light">remember_me</span>
-                <span class="title-bar">Members</span>
-            </a>
-        </li>
-    </ul>
-    @endcan
     @can('games-list')
     <ul>
         <li class="{{set_active('games*')}}">
@@ -69,12 +48,12 @@
         </li>
     </ul>
     @endcan
-    @can('organizations-list')
+    @can('clubs-list')
     <ul>
-        <li class="{{set_active('organizations*')}}">
-            <a href="{{route('organizations.index')}}">
-                <span class="icon material-icons md-light">corporate_fare</span>
-                <span class="title-bar">Organizations</span>
+        <li class="{{set_active('clubs*')}}">
+            <a href="{{route('clubs.index')}}">
+                <span class="icon material-icons md-light">reduce_capacity</span>
+                <span class="title-bar">Clubs</span>
             </a>
         </li>
     </ul>
@@ -109,17 +88,8 @@
         </li>
     </ul>
     @endcan
-    @can('clubs-list')
-    <ul>
-        <li class="{{set_active('clubs*')}}">
-            <a href="{{route('clubs.index')}}">
-                <span class="icon material-icons md-light">reduce_capacity</span>
-                <span class="title-bar">Clubs</span>
-            </a>
-        </li>
-    </ul>
-    @endcan
-    @role('Superadmin')
+
+    @role('superadmin')
     @can('admins-list')
     <ul>
         <li class="{{set_active('admins*')}}">

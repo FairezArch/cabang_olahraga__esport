@@ -15,7 +15,7 @@
 <div class="row">
     @if(count($teams) > 0)
     <div class="col-sm-6">
-        <div class="club">
+        <div class="team">
             <div class="card shadow-sm rounded">
                 <div class="card-header">
                     <h4>List Team</h4>
@@ -33,10 +33,12 @@
     @endif
     @if(count($clubs) > 0)
     <div class="col-sm-6">
-        <div class="mt-4">
-            <h4>List Club</h4>
+        <div class="club">
             <div class="card shadow-sm rounded">
                 <div class="card-body">
+                    <div class="card-header">
+                        <h4>List Club</h4>
+                    </div>
                     <ul class="list-group">
                         @foreach($clubs as $club)
                         <li class="list-group-item">{{$club->club_name}}</li>

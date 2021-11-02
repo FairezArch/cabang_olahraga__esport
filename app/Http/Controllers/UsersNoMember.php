@@ -27,10 +27,9 @@ class UsersNoMember extends Controller
      */
     public function index()
     {
-        $index = User::where('active',1)->where('cabang_id',auth::user()->cabang_id)->paginate(5);
+        $lists = User::where('active_member',1)->where('cabang_id',auth::user()->cabang_id)->paginate(5);
         // $branchs = Branchsport::get();
-        $data = ['lists'=>$index];
-        return view('pages.usernomember.users',$data);
+        return view('pages.usernomember.users',compact('lists'));
     }
 
     /**

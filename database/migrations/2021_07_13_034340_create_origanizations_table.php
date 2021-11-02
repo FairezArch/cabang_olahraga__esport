@@ -15,10 +15,8 @@ class CreateOriganizationsTable extends Migration
     {
         Schema::create('origanizations', function (Blueprint $table) {
             $table->id();
-            $table->string('name_club')->nullable();
-            $table->string('owner_club')->nullable();
-            $table->text('desc')->nullable();
-            $table->string('team_name')->nullable();
+            $table->integer('club_id')->default(0);
+            $table->integer('user_id')->default(0);
             $table->integer('cabang_id')->default(0);
             $table->timestamps();
             $table->softDeletes();

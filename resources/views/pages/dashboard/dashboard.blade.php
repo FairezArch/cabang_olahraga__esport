@@ -25,6 +25,7 @@
     </div>
 </div>
 <div class="row">
+    @if(count($awards) > 0)
     <div class="col-sm-6">
         <div class="mt-4">
             <h4 class="">Award</h4>
@@ -39,6 +40,7 @@
             </div>
         </div>
     </div>
+    @endif
     @if(count($clubs) > 0)
     <div class="col-sm-6">
         <div class="mt-4">
@@ -47,7 +49,7 @@
                 <div class="card-body">
                     <ul class="list-group">
                         @foreach($clubs as $club)
-                        <li class="list-group-item">{{$club->club_name}}</li>
+                        <li class="list-group-item"><a href="{{url('dashboard/joinClub/'.$club->slug)}}">{{$club->club_name}}</a></li>
                         @endforeach
                     </ul>
                 </div>

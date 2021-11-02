@@ -24,6 +24,7 @@ class CreateTeamsTable extends Migration
             $table->string('games')->nullable();
             $table->string('members')->nullable();
             $table->string('leader_team')->nullable();
+            $table->integer('club_id')->default(0);
             $table->integer('cabang_id')->default(0);
             $table->timestamps();
             $table->softDeletes();

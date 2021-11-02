@@ -1,45 +1,37 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Laravel</title>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Styles -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-</head>
-
-<body class="antialiased">
-    <div class="container">
-        <div class="mt-4">
+@include('Auth.components.header')
+<div class="container-fluid register-image">
+    <div class="p-4">
+        <div class="card p-4 rounded" style="width: 50%;margin: 0 auto;">
+            <div class="login-form-title">Register Account</div>
             <form method="POST" action="{{route('register.add')}}" enctype="multipart/form-data">
                 @csrf
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="firstname">Firstname</label>
                         <input type="text" value="{{old('firstname')}}" class="form-control @error('firstname') is-invalid @enderror" id="firstname" name="firstname" placeholder="Firstname">
                         @error('firstname')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="lastname">Lastname</label>
                         <input type="text" value="{{old('lastname')}}" class="form-control @error('firstname') is-invalid @enderror" id="lastname" name="lastname" placeholder="Lastname">
                         @error('lastname')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="email">Email</label>
                         <input type="email" value="{{old('email')}}" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="Email" name="email">
                         @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="ktp">No KTP</label>
+                        <input type="text" class="form-control" id="ktp" name="ktp">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="pass">Password</label>
@@ -48,10 +40,6 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="ktp">No KTP</label>
-                    <input type="text" class="form-control" id="ktp" name="ktp">
                 </div>
                 <div class="form-group">
                     <label for="inputAddress">Address</label>
@@ -88,6 +76,5 @@
             </form>
         </div>
     </div>
-</body>
-
-</html>
+</div>
+@include('Auth.components.footer')

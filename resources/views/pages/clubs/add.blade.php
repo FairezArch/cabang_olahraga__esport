@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="shadow-sm p-3 mb-5 bg-white rounded">
         <h2>Tambah Club</h2>
-        <form method="POST" action="{{route('clubs.store')}}">
+        <form method="POST" action="{{route('clubs.store')}}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="clubname">Nama Club</label>
@@ -22,6 +22,17 @@
                 </select>
                 @error('user')
                 <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="desc">Diskripsi</label>
+                <textarea id="desc" class="form-control" name="desc" cols="30" rows="10"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="cover">Gambar</label>
+                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file">
+                @error('file')
+                <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">

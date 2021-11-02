@@ -4,8 +4,9 @@
 <div class="container-fluid">
     <div class="shadow-sm p-3 mb-5 bg-white rounded">
         <h2>Tambah Team</h2>
-        <form method="POST" action="{{route('teams.store')}}" enctype="multipart/form-data">
+        <form method="POST" action="{{url('clubs/'.$club_id.'/teams/store')}}" enctype="multipart/form-data">
             @csrf
+            <input type="hidden" name="club_id" id="club_id" value="{{$club_id}}">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="nameteam">Nama Team</label>
@@ -47,12 +48,14 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="listeam">List Team</label>
+                    @if(!$members->isEmpty())
                     <select name="listeam[]" id="listeam" class="form-control @error('listeam') is-invalid @enderror" multiple="multiple">
                         <option value="">Select An Option</option>
                         @foreach($members as $member)
                         <option value="{{$member->id}}">{{$member->name}}</option>
                         @endforeach
                     </select>
+                    @endif
                     @error('leader')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -87,7 +90,7 @@
                 </div>
             </div>
             <div class="button-grup">
-                <a href="{{route('teams.index')}}" class="btn btn-danger m-1">Back</a>
+                <a href="{{url('clubs/'.$club_id.'/teams')}}" class="btn btn-danger m-1">Back</a>
                 <button type="submit" class="btn btn-primary m-1">Save</button>
             </div>
         </form>

@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Club;
 use Illuminate\Support\Facades\Validator;
-use DB;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use DB;
 use App\Models\Branchsport;
 
 class ClubsController extends Controller
@@ -58,11 +59,13 @@ class ClubsController extends Controller
         $rules = [
             'user' => 'required|integer',
             'clubname' => 'required',
+            'file'      => 'required|file|mimes:jpg,jpeg,bmp,png',
         ];
   
         $messages = [
             'user.required'       => 'Nama event wajib diisi',
             'clubname.required'     => 'Nama Club wajib diisi',
+            'file.required'      => 'Logo Club wajib diupload',
         ];
 
         $validator = Validator::make($request->all(),$rules,$messages);
@@ -71,9 +74,18 @@ class ClubsController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+    
+        $namefile = str_replace(' ', '_', $request->file->getClientOriginalName());
+        $filename  = $namefile . '_' . time() . '.' . $request->file->extension();
+        $request->file->move(public_path('uploads'), $filename);
+
+
         Club::create([
             'iduser' => $request->user,
             'club_name' => $request->clubname,
+            'slug' => Str::slug($request->clubname),
+            'file'=>$filename,
+            'description' => $request->desc,
             'cabang_id' => $request->branch
         ]);
 
@@ -134,10 +146,22 @@ class ClubsController extends Controller
         }
 
         $club = Club::find($id);
+        $filename = $club->file;
+
+        if (!empty($request->file)) {
+            File::delete(public_path("uploads/" . $club->file));
+
+            $namefile = str_replace(' ', '_', $request->file->getClientOriginalName());
+            $filename  = $namefile . '_' . time() . '.' . $request->file->extension();
+            $request->file->move(public_path('uploads'), $filename);
+        }
 
         $club->update([
             'iduser' => $request->user,
             'club_name' => $request->clubname,
+            'slug' => Str::slug($request->clubname),
+            'file'=>$filename,
+            'description' => $request->desc,
             'cabang_id' => $request->branch
         ]);
 

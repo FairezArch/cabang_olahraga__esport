@@ -9,5 +9,5 @@ class Organization extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'origanizations';
-    protected $fillable=['name_club','owner_club','desc','team_name','cabang_id'];
+    protected $fillable=['club_id','user_id','cabang_id'];
 }

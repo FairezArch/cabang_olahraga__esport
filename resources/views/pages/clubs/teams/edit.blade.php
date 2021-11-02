@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="shadow-sm p-3 mb-5 bg-white rounded">
         <h2>Tambah Team</h2>
-        <form method="POST" action="{{route('teams.update', $team->id)}}" enctype="multipart/form-data">
+        <form method="POST" action="{{url('clubs/'.$club_id.'/teams/update/'.$team->id)}}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-row">
@@ -97,7 +97,7 @@
                 @endif
             </div>
             <div class="button-grup">
-                <a href="{{route('teams.index')}}" class="btn btn-danger m-1">Back</a>
+                <a href="{{url('clubs/'.$club_id.'/teams')}}" class="btn btn-danger m-1">Back</a>
                 <button type="submit" class="btn btn-primary m-1">Save</button>
             </div>
         </form>

@@ -9,5 +9,5 @@ class AwardsModel extends Model
 {
     use HasFactory,SoftDeletes;
     protected $table = 'awards';
-    protected $fillable = ['award_name','slug','award_logo','description'];
+    protected $fillable = ['award_name','slug','award_logo','description','cabang_id'];
 }

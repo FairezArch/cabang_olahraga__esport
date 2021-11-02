@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Member;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 use App\Models\Branchsport;
+use App\Models\Member;
+use App\Models\User;
 
 class RegisterMember extends Controller
 {
@@ -16,7 +17,7 @@ class RegisterMember extends Controller
     {
         # code...
         $branchs = Branchsport::get();
-        return view('register',compact('branchs'));
+        return view('Auth.register',compact('branchs'));
     }
 
     public function add(Request $request)

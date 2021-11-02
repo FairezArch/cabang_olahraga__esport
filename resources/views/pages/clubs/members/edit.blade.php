@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="shadow-sm p-3 mb-5 bg-white rounded">
         <h2>Edit Member</h2>
-        <form method="POST" action="{{route('members.update',$user->id)}}" enctype="multipart/form-data">
+        <form method="POST" action="{{url('clubs/'.$club_id.'/members/edit/'.$user->id)}}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-row">
@@ -44,7 +44,7 @@
                 <label for="inputAddress">Address</label>
                 <input type="text" class="form-control" value="{{$user->address}}" id="inputAddress" name="address" placeholder="1234 Main St">
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group">
                 <label for="branch">Cabang</label>
                 <select name="branch" id="branch" class="form-control">
                     @foreach($branchs as $branch)
@@ -79,7 +79,7 @@
                 @endif
             </div>
             <div class="button-grup">
-                <a href="{{route('members.index')}}" class="btn btn-danger m-1">Back</a>
+                <a href="{{url('clubs/'.$club_id.'/members')}}" class="btn btn-danger m-1">Back</a>
                 <button type="submit" class="btn btn-primary m-1">Save</button>
             </div>
         </form>
