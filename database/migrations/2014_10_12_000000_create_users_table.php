@@ -25,6 +25,8 @@ class CreateUsersTable extends Migration
             $table->integer('active')->default(1);
             $table->integer('active_member')->default(0);
             $table->integer('cabang_id')->default(0);
+            $table->integer('province_id')->default(0);
+            $table->integer('city_id')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

@@ -65,31 +65,26 @@ class PositionSeeder extends Seeder
                 'organizations-edit',
                 'organizations-delete'
             ],
+    
             '10' =>  [ 
-                'organizations-event-list',
-                'organizations-event-create',
-                'organizations-event-edit',
-                'organizations-event-delete'
-            ],
-            '11' =>  [ 
                 'members-list',
                 'members-create',
                 'members-edit',
                 'members-delete'
             ],
-            '12' =>  [ 
+            '11' =>  [ 
                 'teams-list',
                 'teams-create',
                 'teams-edit',
                 'teams-delete'
             ],
-            '13' =>  [ 
+            '12' =>  [ 
                 'branchs-list',
                 'branchs-create',
                 'branchs-edit',
                 'branchs-delete'
             ],
-            '14' =>  [ 
+            '13' =>  [ 
                 'users-list',
                 'users-create',
                 'users-edit',

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use DB;
 use App\Models\Branchsport;
 
+
 class ClubsController extends Controller
 {
     public function __construct()
@@ -27,8 +28,8 @@ class ClubsController extends Controller
     public function index()
     {
         //
-        $lists = Club::where('cabang_id',auth::user()->cabang_id)->paginate(5);
-        return view('pages.clubs.index',compact('lists'));
+        $lists = Club::where('cabang_id', auth::user()->cabang_id)->paginate(5);
+        return view('pages.clubs.index', compact('lists'));
     }
 
     /**
@@ -39,12 +40,11 @@ class ClubsController extends Controller
     public function create()
     {
         //
-        // $users = User::where('active',1)->get();
-        $users = DB::table('users')->join('model_has_roles','users.id','model_has_roles.model_id')
-                ->select('users.*','model_has_roles.role_id','model_has_roles.model_id')
-                ->where('model_has_roles.role_id',3)->paginate(5);
+        $users = DB::table('users')->join('model_has_roles', 'users.id', 'model_has_roles.model_id')
+            ->select('users.*', 'model_has_roles.role_id', 'model_has_roles.model_id')
+            ->where('model_has_roles.role_id', 3)->paginate(5);
         $branchs = Branchsport::get();
-        return view('pages.clubs.add',compact('users','branchs'));
+        return view('pages.clubs.add', compact('users', 'branchs'));
     }
 
     /**
@@ -55,26 +55,26 @@ class ClubsController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $rules = [
             'user' => 'required|integer',
             'clubname' => 'required',
             'file'      => 'required|file|mimes:jpg,jpeg,bmp,png',
         ];
-  
+
         $messages = [
             'user.required'       => 'Nama event wajib diisi',
             'clubname.required'     => 'Nama Club wajib diisi',
             'file.required'      => 'Logo Club wajib diupload',
         ];
 
-        $validator = Validator::make($request->all(),$rules,$messages);
+        $validator = Validator::make($request->all(), $rules, $messages);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-    
+
         $namefile = str_replace(' ', '_', $request->file->getClientOriginalName());
         $filename  = $namefile . '_' . time() . '.' . $request->file->extension();
         $request->file->move(public_path('uploads'), $filename);
@@ -84,13 +84,13 @@ class ClubsController extends Controller
             'iduser' => $request->user,
             'club_name' => $request->clubname,
             'slug' => Str::slug($request->clubname),
-            'file'=>$filename,
+            'file' => $filename,
             'description' => $request->desc,
             'cabang_id' => $request->branch
         ]);
 
         return redirect()->route('clubs.index')
-        ->with('success','Club create successfully');
+            ->with('success', 'Club create successfully');
     }
 
     /**
@@ -112,11 +112,11 @@ class ClubsController extends Controller
      */
     public function edit($id)
     {
-        
+
         $club = Club::find($id);
-        $users = User::where('active',1)->get();
+        $users = User::where('active', 1)->get();
         $branchs = Branchsport::get();
-        return view('pages.clubs.edit',compact('club','users','branchs'));
+        return view('pages.clubs.edit', compact('club', 'users', 'branchs'));
     }
 
     /**
@@ -133,15 +133,15 @@ class ClubsController extends Controller
             'user' => 'required|integer',
             'clubname' => 'required',
         ];
-  
+
         $messages = [
             'user.required'       => 'Nama event wajib diisi',
             'clubname.required'     => 'Nama Club wajib diisi',
         ];
 
-        $validator = Validator::make($request->all(),$rules,$messages);
+        $validator = Validator::make($request->all(), $rules, $messages);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -160,13 +160,13 @@ class ClubsController extends Controller
             'iduser' => $request->user,
             'club_name' => $request->clubname,
             'slug' => Str::slug($request->clubname),
-            'file'=>$filename,
+            'file' => $filename,
             'description' => $request->desc,
             'cabang_id' => $request->branch
         ]);
 
         return redirect()->route('clubs.index')
-        ->with('success','Club updated successfully');
+            ->with('success', 'Club updated successfully');
     }
 
     /**
@@ -180,6 +180,18 @@ class ClubsController extends Controller
         //
         Club::find($id)->delete();
         return redirect()->route('clubs.index')
-        ->with('success','Club deleted successfully');
+            ->with('success', 'Club deleted successfully');
+    }
+
+    public function participation($id)
+    {
+        # code...
+        $lists = DB::table('participationevent')
+            ->join('clubs', 'participationevent.club_id', 'clubs.id')
+            ->join('teams', 'participationevent.team_id', 'teams.id')
+            ->select('participationevent.club_id', 'participationevent.team_id', 'clubs.club_name', 'teams.team_name', 'teams.leader_team', 'teams.members')
+            ->paginate(7);
+        
+        return view('pages.clubs.participation', compact('lists'));
     }
 }

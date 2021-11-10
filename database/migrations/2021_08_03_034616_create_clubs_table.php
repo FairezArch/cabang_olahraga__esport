@@ -19,7 +19,7 @@ class CreateClubsTable extends Migration
             $table->string('club_name');
             $table->string('slug');
             $table->string('file');
-            $table->string('teams');
+            $table->string('teams')->nullable();
             $table->string('description');
             $table->integer('cabang_id')->default(0);
             $table->timestamps();

@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['middleware' => ['permission:events-list|events-create|events-edit|events-delete']], function(){
+        Route::get('events/{id}/participation',[EventsController::class,'participation'])->name('events.participation');
         Route::resource('events',EventsController::class);
     });
 
@@ -96,16 +97,18 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('clubs/{club_id}/members/select',[MembersController::class,'selectmember']);
         Route::post('clubs/{club_id}/members/selectadd',[MembersController::class,'directjoin']);
 
-        Route::get('clubs/{club_id}/members/request',[MembersController::class,'requestmember']);
-        Route::post('clubs/{club_id}/members/request/approve/{id}',[MembersController::class,'requestmemberapprove']);
-        Route::post('clubs/{club_id}/members/request/delete/{id}',[MembersController::class,'requestmemberdelete']);
+        Route::get('clubs/{club_id}/atlet/request',[MembersController::class,'requestmember']);
+        Route::post('clubs/{club_id}/atlet/request/approve/{id}',[MembersController::class,'requestmemberapprove']);
+        Route::post('clubs/{club_id}/atlet/request/delete/{id}',[MembersController::class,'requestmemberdelete']);
 
-        Route::get('clubs/{club_id}/members',[MembersController::class,'index']);
-        Route::get('clubs/{club_id}/members/create',[MembersController::class,'create']);
-        Route::post('clubs/{club_id}/members/store',[MembersController::class,'store']);
-        Route::get('clubs/{club_id}/members/edit/{id}',[MembersController::class,'edit']);
-        Route::put('clubs/{club_id}/members/update/{id}',[MembersController::class,'update']);
-        Route::delete('clubs/{club_id}/members/delete/{id}',[MembersController::class,'destroy']);
+        Route::get('clubs/{club_id}/atlet',[MembersController::class,'index']);
+        Route::get('clubs/{club_id}/atlet/create',[MembersController::class,'create']);
+        Route::post('clubs/{club_id}/atlet/store',[MembersController::class,'store']);
+        Route::get('clubs/{club_id}/atlet/edit/{id}',[MembersController::class,'edit']);
+        Route::put('clubs/{club_id}/atlet/update/{id}',[MembersController::class,'update']);
+        Route::delete('clubs/{club_id}/atlet/delete/{id}',[MembersController::class,'destroy']);
+
+        
     });
 
     Route::group(['middleware' => ['permission:teams-list|teams-create|teams-edit|teams-delete']], function(){
@@ -117,13 +120,16 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('clubs/{club_id}/teams/delete/{id}',[TeamsController::class,'destroy']);
     });
 
+    Route::group(['middleware' => ['permission:clubs-list|clubs-create|clubs-edit|clubs-delete']], function(){
+        Route::get('clubs/{id}/participation',[ClubsController::class,'participation'])->name('clubs.participation');
+        Route::resource('clubs',ClubsController::class);
+    });
+
     Route::group(['middleware' => ['permission:awards-list|awards-create|awards-edit|awards-delete']], function(){
         Route::resource('awards',AwardsController::class);
     });
 
-    Route::group(['middleware' => ['permission:clubs-list|clubs-create|clubs-edit|clubs-delete']], function(){
-        Route::resource('clubs',ClubsController::class);
-    });
+
     Route::group(['middleware' => ['permission:organizations-event-list|organizations-event-create|organizations-event-edit|organizations-event-delete']], function(){
         Route::get('organizations/{idorg}/event',[OrganizationsController::class,'eventindex']);
         Route::get('organizations/{idorg}/event/create',[OrganizationsController::class,'eventcreate']);

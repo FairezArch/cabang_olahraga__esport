@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRolenamesTable extends Migration
+class CreateParticipationeventTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateRolenamesTable extends Migration
      */
     public function up()
     {
-        Schema::create('rolenames', function (Blueprint $table) {
+        Schema::create('participationevent', function (Blueprint $table) {
             $table->id();
-            $table->string('role_name');
+            $table->integer('event_id')->default(0);
+            $table->integer('club_id')->default(0);
+            $table->integer('team_id')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +30,6 @@ class CreateRolenamesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rolenames');
+        Schema::dropIfExists('participationevent');
     }
 }

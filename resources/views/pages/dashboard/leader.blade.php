@@ -6,13 +6,13 @@
         @foreach($events as $event)
         <div class="item">
             <a href="{{url('dasboard/event/'.$event->slug)}}" target="_blank" rel="noopener noreferrer">
-                <img class="owl-lazy img-responsive" data-src="{{url('uploads/'.$event->file)}}" alt="Image">
+                <img class="owl-lazy img-responsive" data-src="{{url('uploads/'.$event->file)}}" alt="Image" height="220">
             </a>
         </div>
         @endforeach
     </div>
 </div>
-<div class="row">
+<div class="row mt-3">
     @if(count($teams) > 0)
     <div class="col-sm-6">
         <div class="team">

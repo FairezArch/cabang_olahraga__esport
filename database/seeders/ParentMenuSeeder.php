@@ -25,11 +25,10 @@ class ParentMenuSeeder extends Seeder
             'Events',
             'Awards',
             'Organizations',
-            'Organizations event',
             'Members',
             'Teams',
             'Cabang Olahraga',
-            'Users'
+            'Atlet'
         ];
         Menus_web::query()->truncate();
 

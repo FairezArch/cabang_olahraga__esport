@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="shadow-sm p-3 mb-5 bg-white rounded">
-        <h2>Tambah Club</h2>
+        <h2>Edit Club</h2>
         <form method="POST" action="{{route('clubs.update',$club->id)}}">
             @csrf
             @method('PUT')

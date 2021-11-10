@@ -119,8 +119,8 @@
             </a>
         </li>
     </ul>
-    @can('users-list')
-    <ul>
+    
+    <ul class="d-none">
         <li class="{{set_active('users*')}}">
             <a href="{{route('users.index')}}">
                 <span class="icon material-icons md-light">person_outline</span>
@@ -128,7 +128,7 @@
             </a>
         </li>
     </ul>
-    @endcan
+
     <ul>
         <li>
             <a href="{{route('logout')}}">

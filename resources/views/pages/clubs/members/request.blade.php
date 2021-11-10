@@ -1,9 +1,9 @@
 @extends('master')
-@section('title', '- Request Members')
+@section('title', '- Request Atlet')
 @section('content')
 <div class="container-fluid">
     <div class="bg-white rounded p-3 mb-3">
-        <h2 class="color-title mt-1 mb-1">Request Members</h2>
+        <h2 class="color-title mt-1 mb-1">Request Atlet</h2>
     </div>
     <div class="wrapper-table p-3 bg-white rounded">
         @if ($message = Session::get('success'))
@@ -30,7 +30,7 @@
                         <td>
                             <div class="d-flex">
                                 @can('members-edit')
-                                <form method="POST" action="{{url('clubs/'.$club_id.'/members/request/approve/'.$list->id)}}" class="m-1">
+                                <form method="POST" action="{{url('clubs/'.$club_id.'/atlet/request/approve/'.$list->id)}}" class="m-1">
                                     {{ csrf_field() }}
                                     <button type="submit" class="badge badge-info p-2 border-0">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
@@ -40,7 +40,7 @@
                                 </form>
                                 @endcan
                                 @can('members-delete')
-                                <form method="POST" action="{{url('clubs/'.$club_id.'/members/request/delete/'.$list->id)}}" class="m-1">
+                                <form method="POST" action="{{url('clubs/'.$club_id.'/atlet/request/delete/'.$list->id)}}" class="m-1">
                                     {{ csrf_field() }}
                                     {{ method_field('delete') }}
                                     <button type="submit" class="badge badge-danger p-2 border-0">

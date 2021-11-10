@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\EventsModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use App\Models\Branchsport;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Branchsport;
+use App\Models\EventsModel;
+use App\Models\participationevent;
+use App\Models\Club;
+use App\Models\TeamModel;
+use DB;
 
 class EventsController extends Controller
 {
@@ -27,7 +31,7 @@ class EventsController extends Controller
     public function index()
     {
         //
-        $lists = EventsModel::where('cabang_id',auth::user()->cabang_id)->paginate(5);
+        $lists = EventsModel::where('cabang_id', auth::user()->cabang_id)->paginate(5);
         return view('pages.events.index', compact('lists'));
     }
 
@@ -40,7 +44,7 @@ class EventsController extends Controller
     {
         //
         $branchs = Branchsport::get();
-        return view('pages.events.add',compact('branchs'));
+        return view('pages.events.add', compact('branchs'));
     }
 
     /**
@@ -71,19 +75,19 @@ class EventsController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $namefile = str_replace(' ','_', pathinfo($request->file->getClientOriginalName(),PATHINFO_FILENAME));
-        $filename  = $namefile.'_'.time().'.'.$request->file->extension();  
+        $namefile = str_replace(' ', '_', pathinfo($request->file->getClientOriginalName(), PATHINFO_FILENAME));
+        $filename  = $namefile . '_' . time() . '.' . $request->file->extension();
         $request->file->move(public_path('uploads'), $filename);
 
         EventsModel::create([
             'event_name' => $request->name,
-            'slug' => Str::slug($request->name),//strtolower(str_replace(' ','-',$request->name)),
+            'slug' => Str::slug($request->name), //strtolower(str_replace(' ','-',$request->name)),
             'start_date' => $request->date,
             'end_date' => $request->end,
             'file' => $filename,
             'description' => $request->desc,
-            'cabang_id'=>$request->branch
-            
+            'cabang_id' => $request->branch
+
         ]);
         return redirect()->route('events.index')
             ->with('success', 'event created successfully');
@@ -111,7 +115,7 @@ class EventsController extends Controller
         //
         $event = EventsModel::find($id);
         $branchs = Branchsport::get();
-        return view('pages.events.edit', compact('event','branchs'));
+        return view('pages.events.edit', compact('event', 'branchs'));
     }
 
     /**
@@ -141,14 +145,14 @@ class EventsController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        
+
         $event = EventsModel::find($id);
         $filename = $event->file;
 
-        if(!empty($request->file)){
-            File::delete(public_path("uploads/".$event->file));
-            $namefile = str_replace(' ','_', pathinfo($request->file->getClientOriginalName(),PATHINFO_FILENAME));
-            $filename  = $namefile.'_'.time().'.'.$request->file->extension();  
+        if (!empty($request->file)) {
+            File::delete(public_path("uploads/" . $event->file));
+            $namefile = str_replace(' ', '_', pathinfo($request->file->getClientOriginalName(), PATHINFO_FILENAME));
+            $filename  = $namefile . '_' . time() . '.' . $request->file->extension();
             $request->file->move(public_path('uploads'), $filename);
         }
 
@@ -159,7 +163,7 @@ class EventsController extends Controller
             'end_date' => $request->end,
             'file' => $filename,
             'description' => $request->desc,
-            'cabang_id'=>$request->branch
+            'cabang_id' => $request->branch
         ]);
 
         return redirect()->route('events.index')
@@ -176,11 +180,23 @@ class EventsController extends Controller
     {
         //
         $event = EventsModel::find($id);
-        if(!empty($event->file)){
-            File::delete(public_path("uploads/".$event->file));
+        if (!empty($event->file)) {
+            File::delete(public_path("uploads/" . $event->file));
         }
         $event->delete();
         return redirect()->route('events.index')
             ->with('success', 'Events deleted successfully');
+    }
+
+    public function participation($id)
+    {
+        # code...
+        $event = EventsModel::find($id)->event_name;
+        $lists = DB::table('participationevent')
+            ->join('clubs', 'participationevent.club_id', 'clubs.id')
+            ->join('teams', 'participationevent.team_id', 'teams.id')
+            ->select('participationevent.club_id','participationevent.team_id', 'clubs.club_name', 'teams.team_name', 'teams.leader_team', 'teams.members')
+            ->paginate(7);
+        return view('pages.events.participation', compact('event', 'lists'));
     }
 }

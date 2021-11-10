@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="bg-white rounded p-3 mb-3">
-        <h2 class="color-title mt-1 mb-1">List Admin</h2>
+        <h2 class="color-title mt-1 mb-1">List Admin & Management</h2>
     </div>
     <div class="wrapper-table p-3 bg-white rounded">
         <div class="w-100 mt-3 mb-3 text-right">
@@ -12,7 +12,7 @@
             @endcan
         </div>
         <div class="table-responsive-sm">
-            <table class="table table-hover table-striped"> <?php /* */?>
+            <table class="table table-hover table-striped">
                 <thead>
                     <tr>
                         <th>No</th>

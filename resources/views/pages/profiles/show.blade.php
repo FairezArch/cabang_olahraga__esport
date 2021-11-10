@@ -8,7 +8,7 @@
                 <h2>Profile</h2>
             </div>
             <div class="col-sm-9 text-right">
-                @if(Auth::check() && !Auth::user()->hasRole('superadmin')) 
+                @if( Auth::check() && Auth::user()->hasRole('Atlet') ) 
                 <a class="btn btn-primary" href="{{url('infoclub')}}">Info Club</a>
                 @else
                 &nbsp;

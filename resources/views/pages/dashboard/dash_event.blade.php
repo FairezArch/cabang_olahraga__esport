@@ -4,7 +4,7 @@
 <div class="container-fluid p-0">
     <div class="row">
         <div class="col-md-12">
-            <img src="{{url('uploads/'.$event->file)}}" alt="placeholder 960" class="img-fluid img-responsive" />
+            <img style="height: 300px; width: 100%;" src="{{url('uploads/'.$event->file)}}" alt="placeholder 960" class="img-fluid img-responsive" />
         </div>
     </div>
 </div>

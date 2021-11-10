@@ -5,7 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 // use App\Models\Toolanswer;
 use App\Models\Branchsport;
-class Tools extends Seeder
+
+class BranchSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -21,7 +22,17 @@ class Tools extends Seeder
         //     Toolanswer::create(['component'=>$input]);
         // }
         Branchsport::query()->truncate();
-        Branchsport::create(['name'=>'Esport','user_id'=>1]);
+        Branchsport::create(
+            ['name'=>'Esport','user_id'=>1]
+        );
+
+        Branchsport::create(
+            ['name'=>'Sepak Bola','user_id'=>1]
+        );
+
+        Branchsport::create(
+            ['name'=>'Lempar Cakram','user_id'=>1]
+        );
         
     }
 }

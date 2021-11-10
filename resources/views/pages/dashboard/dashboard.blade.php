@@ -6,7 +6,7 @@
         @foreach($events as $event)
         <div class="item">
             <a href="{{url('dasboard/event/'.$event->slug)}}" target="_blank" rel="noopener noreferrer">
-                <img class="owl-lazy img-responsive" data-src="{{url('uploads/'.$event->file)}}" alt="Image">
+                <img class="owl-lazy img-responsive" data-src="{{url('uploads/'.$event->file)}}" alt="Image" height="220">
             </a>
         </div>
         @endforeach
@@ -18,7 +18,7 @@
         @foreach($games as $game)
         <div>
             <a href="{{url('dasboard/game/'.$game->slug)}}" target="_blank" rel="noopener noreferrer">
-                <img class="owl-lazy img-responsive clopimg" data-src="{{url('uploads/'.$game->image_game)}}" alt="Image">
+                <img class="owl-lazy img-responsive clopimg" data-src="{{url('uploads/'.$game->image_game)}}" alt="Image" height="220">
             </a>
         </div>
         @endforeach
@@ -33,7 +33,7 @@
                 @foreach($awards as $award)
                 <div>
                     <a href="{{url('dasboard/award/'.$award->slug)}}" target="_blank" rel="noopener noreferrer">
-                        <img class="owl-lazy img-responsive clopimg" data-src="{{url('uploads/'.$award->award_logo)}}" alt="Image">
+                        <img class="owl-lazy img-responsive clopimg" data-src="{{url('uploads/'.$award->award_logo)}}" alt="Image" height="220">
                     </a>
                 </div>
                 @endforeach
@@ -41,8 +41,7 @@
         </div>
     </div>
     @endif
-    @if(count($clubs) > 0)
-    <div class="col-sm-6">
+    <div class="col-sm-6 d-none">
         <div class="mt-4">
             <h4>List Club</h4>
             <div class="card shadow-sm rounded">
@@ -56,7 +55,6 @@
             </div>
         </div>
     </div>
-    @endif
 </div>
 @section('script-footer')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

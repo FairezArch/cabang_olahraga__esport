@@ -39,8 +39,6 @@ class MembersController extends Controller
             ->whereNull('members.deleted_at')
             ->where('clubs.cabang_id',auth::user()->cabang_id)
             ->paginate(5);
-        // $lists = Member::paginate(5);
-        // return dd($lists);
         return view('pages.clubs.members.index', compact('lists','club_id'));
     }
 
@@ -53,7 +51,6 @@ class MembersController extends Controller
     {
         //
         $branchs = Branchsport::get();
-        // return dd(compact('branchs','club_id'));
         return view('pages.clubs.members.add',compact('branchs','club_id'));
     }
 
@@ -66,7 +63,6 @@ class MembersController extends Controller
     public function store(Request $request, $club_id)
     {
         //
-        // return dd($club_id);
         $rules = [
             'firstname' => 'required|min:3',
             'lastname'  => 'required|min:3',
@@ -102,7 +98,7 @@ class MembersController extends Controller
         $filename1  = $namefile1 . '_' . time() . '.' . $request->filektp->extension();
         $request->filektp->move(public_path('uploads'), $filename1);
 
-        $role = Role::find(5);
+        $role = Role::find(2);
         $user = User::create([
             'name' => $request->firstname,
             'lastname' => $request->lastname,
@@ -123,7 +119,7 @@ class MembersController extends Controller
         ]);
         $user->assignRole($role->name);
 
-        return redirect()->to('clubs/'.$club_id.'/members')
+        return redirect()->to('clubs/'.$club_id.'/atlet')
         ->with('success','Member created successfully');
     }
 
@@ -162,7 +158,7 @@ class MembersController extends Controller
      */
     public function update(Request $request, $club_id, $id)
     {
-        // return dd($id);
+
         $rules = [
             'firstname' => 'required|min:3',
             'lastname'  => 'required|min:3',
@@ -223,7 +219,7 @@ class MembersController extends Controller
             'cabang_id'=>$request->branch
         ]);
 
-        return redirect()->to('clubs/'.$club_id.'/members')
+        return redirect()->to('clubs/'.$club_id.'/atlet')
         ->with('success','Member updated successfully');
     }
 
@@ -244,18 +240,20 @@ class MembersController extends Controller
         $user->update(['active_member' => 0]);
         $member->delete();
 
-        return redirect()->to('clubs/'.$club_id.'/members')
+        return redirect()->to('clubs/'.$club_id.'/atlet')
         ->with('success','Member deleted successfully');
     }
 
     public function mail()
     {
+
         # code...
         return view('pages.clubs.members.sendmail');
     }
 
     public function sendmail(Request $request)
     {
+
         # code...
         $details = [
             'title' => 'Hallo Calon Member',
@@ -274,8 +272,8 @@ class MembersController extends Controller
 
     public function selectmember($club_id)
     {
+
         # code...
-        // $lists = User::join('members','users.id')
         $lists = User::where('active', 1)->where('active_member', 0)->get();
         $branchs = Branchsport::get();
         return view('pages.clubs.members.select', compact('lists','branchs','club_id'));
@@ -283,41 +281,39 @@ class MembersController extends Controller
 
     public function directjoin(Request $request, $club_id)
     {
+
         # code...
         Member::create([
             'iduser' => $request->selectuser,
             'club_id' => $club_id,
         ]);
 
-        $role = Role::find(5);
+        $role = Role::find(2);
         $user = User::find($request->selectuser);
         $user->update(['active_member' => 1,'cabang_id'=>$request->branch]);
         DB::table('model_has_roles')->where('model_id', $user->id)->delete();
         $user->assignRole($role->name);
         
-        return redirect()->to('clubs/'.$club_id.'/members')
+        return redirect()->to('clubs/'.$club_id.'/atlet')
         ->with('success','Members has been join to member');
     }
 
     public function requestmember($club_id)
     {
+
         # code...
-        // $lists = RequestMembers::where('club_id',$club_id)
-        //         ->where('approve',0)
-        //         ->whereNull('deleted_at')->paginate(5);
         $lists = DB::table('request_members')
                 ->join('users','request_members.user_id','users.id')
                 ->select('users.*','users.id as user_id','request_members.*')
                 ->where('request_members.approve',0)
                 ->whereNull('request_members.deleted_at')->paginate(5);
-        // return dd($lists);
         return view('pages.clubs.members.request',compact('lists','club_id'));
     }
 
     public function requestmemberapprove($club_id,$id)
     {
+
         # code...
-        // return dd($club_id);
         $requestmembers = RequestMembers::find($id);
         $user_id = $requestmembers->user_id;
         
@@ -326,7 +322,7 @@ class MembersController extends Controller
             'club_id' => $club_id,
         ]);
        
-        $role = Role::find(5);
+        $role = Role::find(2);
         $user = User::find($user_id);
         $user->update(['active_member' => 1]);
         DB::table('model_has_roles')->where('model_id', $user->id)->delete();
@@ -334,7 +330,7 @@ class MembersController extends Controller
 
         $requestmembers->update(['approve'=>1]);
 
-        return redirect()->to('clubs/'.$club_id.'/members/request')
+        return redirect()->to('clubs/'.$club_id.'/atlet/request')
         ->with('success','Approve member request successfully');
 
     }
@@ -343,7 +339,7 @@ class MembersController extends Controller
     {
         # code...
         RequestMembers::find($id)->delete();
-        return redirect()->to('clubs/'.$club_id.'/members/request')
+        return redirect()->to('clubs/'.$club_id.'/atlet/request')
         ->with('success','Rejected member request');
     }
 }

@@ -1,10 +1,10 @@
 @extends('master')
-@section('title', '- Member')
+@section('title', '- Atlet')
 @section('content')
 <div class="container-fluid">
     <div class="shadow-sm p-3 mb-5 bg-white rounded">
-        <h2>Tambah Member</h2>
-        <form method="POST" action="{{url('clubs/'.$club_id.'/members/store')}}" enctype="multipart/form-data">
+        <h2>Tambah Atlet</h2>
+        <form method="POST" action="{{url('clubs/'.$club_id.'/atlet/store')}}" enctype="multipart/form-data">
             @csrf
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="button-grup">
-                <a href="{{url('clubs/'.$club_id.'/members')}}" class="btn btn-danger m-1">Back</a>
+                <a href="{{url('clubs/'.$club_id.'/atlet')}}" class="btn btn-danger m-1">Back</a>
                 <button type="submit" class="btn btn-primary m-1">Save</button>
             </div>
         </form>

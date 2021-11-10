@@ -14,35 +14,26 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        //
+        
         Role::create([
             'name' => 'superadmin',
             'guard_name' => 'web'
         ]);
 
         Role::create([
-            'name' => 'user',
+            'name' => 'atlet',
             'guard_name' => 'web'
         ]);
 
         Role::create([
-            'name' => 'Club Owner/BOD',
+            'name' => 'ownerClub',
             'guard_name' => 'web'
         ]);
 
         Role::create([
-            'name' => 'Organization members',
+            'name' => 'managementClub',
             'guard_name' => 'web'
         ]);
 
-        Role::create([
-            'name' => 'Club Members',
-            'guard_name' => 'web'
-        ]);
-
-        Role::create([
-            'name' => 'Event Organization',
-            'guard_name' => 'web'
-        ]);
     }
 }

@@ -1,18 +1,20 @@
 @extends('master')
-@section('title', '- Member')
+@section('title', '- Atlet')
 @section('content')
 <div class="container-fluid">
     <div class="bg-white rounded p-3 mb-3">
-        <h2 class="color-title mt-1 mb-1">List Member</h2>
+        <h2 class="color-title mt-1 mb-1">List Atlet</h2>
     </div>
     <div class="wrapper-table p-3 bg-white rounded">
         <div class="w-100 mt-3 mb-3 multiple-menu">
         <a href="{{route('clubs.index')}}" class="btn btn-danger m-1">Back</a>
             @can('members-create')
-            <a class="btn btn-info" href="{{url('clubs/'.$club_id.'/members/request')}}">Approve Member Request</a>
-            <a class="btn btn-primary m-1" href="{{url('clubs/'.$club_id.'/members/select')}}">Tambah Member Direct</a>
-            <a class="btn btn-primary m-1" href="{{url('clubs/'.$club_id.'/members/mail')}}">Tambah Member Mail</a>
-            <a class="btn btn-primary m-1" href="{{url('clubs/'.$club_id.'/members/create')}}">Tambah Member</a>
+            <a class="btn btn-info" href="{{url('clubs/'.$club_id.'/atlet/request')}}">Approve Atlet Request</a>
+            <?php //Ini harus diedit
+            #{{url('clubs/'.$club_id.'/members/select')}} #{{url('clubs/'.$club_id.'/members/mail')}} ?>
+            <!-- <a class="btn btn-primary m-1" href="">Tambah Atlet Direct</a>
+            <a class="btn btn-primary m-1" href="">Tambah Atlet Mail</a> -->
+            <a class="btn btn-primary m-1" href="{{url('clubs/'.$club_id.'/atlet/create')}}">Tambah Atlet</a>
             @endcan
         </div>
         <div class="table-responsive-sm">
@@ -34,7 +36,7 @@
                         <td>
                             <div class="d-flex">
                                 @can('members-edit')
-                                <a href="{{url('clubs/'.$club_id.'/members/edit/'.$list->member_id)}}" class="badge badge-primary p-2 m-1">
+                                <a href="{{url('clubs/'.$club_id.'/atlet/edit/'.$list->member_id)}}" class="badge badge-primary p-2 m-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                         <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
@@ -42,7 +44,7 @@
                                 </a>
                                 @endcan
                                 @can('members-delete')
-                                <form method="POST" action="{{url('clubs/'.$club_id.'/members/delete/'.$list->member_id)}}" class="m-1">
+                                <form method="POST" action="{{url('clubs/'.$club_id.'/atlet/delete/'.$list->member_id)}}" class="m-1">
                                     {{ csrf_field() }}
                                     {{ method_field('delete') }}
                                     <button type="submit" class="badge badge-danger p-2 border-0">

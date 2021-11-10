@@ -27,13 +27,7 @@
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-            <div class="form-group">
-                <label for="file">Gambar</label>
-                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file">
-                @error('file')
-                <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
+           
             <div class="form-group">
                 <label for="branch">Cabang</label>
                 <select name="branch" id="branch" class="form-control">
@@ -45,6 +39,13 @@
             <div class="form-group">
                 <label for="desc">Diskripsi</label>
                 <textarea id="desc" class="form-control" name="desc" cols="30" rows="10"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="file">Gambar</label>
+                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file">
+                @error('file')
+                <div class="text-danger">{{ $message }}</div>
+                @enderror
             </div>
             <div class="button-grup">
                 <a href="{{route('events.index')}}" class="btn btn-danger m-1">Back</a>

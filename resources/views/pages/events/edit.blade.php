@@ -29,6 +29,18 @@
                 @enderror
             </div>
             <div class="form-group">
+                <label for="branch">Cabang</label>
+                <select name="branch" id="branch" class="form-control">
+                    @foreach($branchs as $branch)
+                    <option value="{{$branch->id}}" {{($branch->id == $event->cabang_id) ? 'selected="selected"' : ''}}>{{$branch->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="desc">Diskripsi</label>
+                <textarea id="desc" class="form-control" name="desc" cols="30" rows="10">{{$event->description}}</textarea>
+            </div>
+            <div class="form-group">
                 <label for="file">Gambar</label>
                 <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file">
                 @error('file')
@@ -43,18 +55,6 @@
                     </div>
                 </div>
                 @endif
-            </div>
-            <div class="form-group">
-                <label for="branch">Cabang</label>
-                <select name="branch" id="branch" class="form-control">
-                    @foreach($branchs as $branch)
-                    <option value="{{$branch->id}}" {{($branch->id == $team->cabang_id) ? 'selected="selected"' : ''}}>{{$branch->name}}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="desc">Diskripsi</label>
-                <textarea id="desc" class="form-control" name="desc" cols="30" rows="10">{{$event->description}}</textarea>
             </div>
             <div class="button-grup">
                 <a href="{{route('events.index')}}" class="btn btn-danger m-1">Back</a>

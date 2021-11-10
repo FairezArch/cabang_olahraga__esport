@@ -17,64 +17,82 @@ class UserSeeder extends Seeder
         //
         User::query()->truncate();
         $admin = User::create([
-            'name' => 'Admin',
+            'name' => 'Aldi',
+            'lastname' => 'Firmansyah',
+            'address' => 'Jl. Jatinegara Timur No.4 RT.11, RT.4/RW.3, Bali Mester, Kecamatan Jatinegara, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta 13310',
             'email' => 'admin@example.id',
-            'password' => bcrypt('123123'),
             'active' => 99,
-            'cabang_id' => 1
+            'active_member' => 1,
+            'cabang_id' => 1,
+            'password' => bcrypt('123123')
         ]);
 
         $admin->assignRole('superadmin');
 
-        $bod = User::create([
-            'name' => 'BOD',
-            'email' => 'bod@example.id',
-            'password' => bcrypt('123123'),
+        $ownerClub = User::create([
+            'name' => 'Burhan',
+            'lastname' => 'Pratama',
+            'address' => 'Jl. A. Yani No.117, Gilingan, Kec. Banjarsari, Kota Surakarta, Jawa Tengah 57134',
+            'email' => 'burhanpratama@example.id',
             'active' => 99,
-            'cabang_id' => 1
+            'active_member' => 1,
+            'cabang_id' => 1,
+            'password' => bcrypt('123123')
         ]);
 
-        $bod->assignRole('Club Owner/BOD');
+        $ownerClub->assignRole('ownerClub');
 
-        $org_member = User::create([
-            'name' => 'org_member',
-            'email' => 'org_member@example.id',
-            'password' => bcrypt('123123'),
+        $managementClub = User::create([
+            'name' => 'Joko',
+            'lastname' => 'aryanto',
+            'address' => 'Jl. A. Yani No.117, Gilingan, Kec. Banjarsari, Kota Surakarta, Jawa Tengah 57134',
+            'email' => 'jokoaryanto@example.id',
             'active' => 99,
-            'cabang_id' => 1
+            'active_member' => 1,
+            'cabang_id' => 1,
+            'password' => bcrypt('123123')
         ]);
 
-        $org_member->assignRole('Organization members');
+        $managementClub->assignRole('managementClub');
 
-        $club_member = User::create([
-            'name' => 'club_member',
-            'email' => 'club_member@example.id',
-            'password' => bcrypt('123123'),
+        $managementClub1 = User::create([
+            'name' => 'Ratna',
+            'lastname' => 'Pratiwi',
+            'address' => 'Jl. A. Yani No.117, Gilingan, Kec. Banjarsari, Kota Surakarta, Jawa Tengah 57134',
+            'email' => 'ratnapratiwi@example.id',
             'active' => 99,
-            'cabang_id' => 1
+            'active_member' => 1,
+            'cabang_id' => 1,
+            'password' => bcrypt('123123')
         ]);
 
-        $club_member->assignRole('Club Members');
-
-        $ev_org = User::create([
-            'name' => 'ev_org',
-            'email' => 'ev_org@example.id',
-            'password' => bcrypt('123123'),
-            'active' => 99,
-            'cabang_id' => 1
-        ]);
-
-        $ev_org->assignRole('Event Organization');
+        $managementClub1->assignRole('managementClub');
 
         $user = User::create([
-            'name' => 'User',
-            'email' => 'user@example.id',
-            'password' => bcrypt('123123'),
+            'name' => 'Fauzan',
+            'lastname' => 'Amir',
+            'address' => 'Jl. Balekambang No.7, Manahan, Kec. Banjarsari, Kota Surakarta, Jawa Tengah 57139',
+            'email' => 'fauzanamir@example.id',
             'active' => 1,
-            'cabang_id' => 1
+            'active_member' => 1,
+            'cabang_id' => 1,
+            'password' => bcrypt('123123')
         ]);
 
-        $user->assignRole('user');
-       
+        $user->assignRole('atlet');
+
+        
+        $user1 = User::create([
+            'name' => 'Rangga',
+            'lastname' => 'Dhari',
+            'address' => 'Jl. DI Panjaitan, Gilingan, Kec. Banjarsari, Kota Surakarta, Jawa Tengah 57134',
+            'email' => 'ranggadhari@example.id',
+            'active' => 1,
+            'active_member' => 1,
+            'cabang_id' => 1,
+            'password' => bcrypt('123123')
+        ]);
+        
+        $user1->assignRole('atlet');
     }
 }

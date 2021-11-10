@@ -16,10 +16,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">{{$club->club_name}}</h4>
                                 <h5 class="card-text">
-                                    Pemilik Club -
-                                    @foreach($users as $user)
-                                    {{ ($club->id_userclub == $user->id) ? $user->name.' '.$user->lastname : ''; }}
-                                    @endforeach
+                                    Pemilik Club - {{ $club->owner_name.' '.$club->owner_lastname }}
                                 </h5>
                                 <p class="card-text">{{$club->club_desc}}</p>
                             </div>
