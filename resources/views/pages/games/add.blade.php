@@ -35,20 +35,23 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group">
-                <label for="file">Gambar Game</label>
-                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" aria-describedby="file">
-                @error('file')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="file">Gambar Game</label>
+                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" aria-describedby="file">
+                    @error('file')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="filelogo">Logo Game</label>
+                    <input type="file" class="form-control @error('filelogo') is-invalid @enderror" id="filelogo" name="filelogo" aria-describedby="filelogo">
+                    @error('filelogo')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
-            <div class="form-group">
-                <label for="filelogo">Logo Game</label>
-                <input type="file" class="form-control @error('filelogo') is-invalid @enderror" id="filelogo" name="filelogo" aria-describedby="filelogo">
-                @error('filelogo')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+
             <div class="form-group">
                 <div class="show-image d-none" id="show-image"></div>
             </div>

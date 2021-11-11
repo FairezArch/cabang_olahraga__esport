@@ -67,10 +67,10 @@ class PositionSeeder extends Seeder
             ],
     
             '10' =>  [ 
-                'members-list',
-                'members-create',
-                'members-edit',
-                'members-delete'
+                'atlet-list',
+                'atlet-create',
+                'atlet-edit',
+                'atlet-delete'
             ],
             '11' =>  [ 
                 'teams-list',
@@ -84,12 +84,6 @@ class PositionSeeder extends Seeder
                 'branchs-edit',
                 'branchs-delete'
             ],
-            '13' =>  [ 
-                'users-list',
-                'users-create',
-                'users-edit',
-                'users-delete'
-            ]
         ];
 
         foreach ($permissions as $permission => $values) {

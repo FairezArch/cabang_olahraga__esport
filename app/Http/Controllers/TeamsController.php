@@ -16,7 +16,9 @@ class TeamsController extends Controller
     public function __construct()
     {
         # code...
-        $this->middleware(['permission:teams-list|teams-create|teams-edit|teams-delete']);
+        $this->middleware(['permission:clubs-edit|teams-list|teams-create|teams-edit|teams-delete']);
+
+        // $this->middleware(['permission:clubs-list|clubs-create|clubs-edit|clubs-delete']);
     }
 
     /**

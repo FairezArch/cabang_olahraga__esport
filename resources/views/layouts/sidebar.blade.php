@@ -29,7 +29,7 @@
         </li>
     </ul>
     
-    <ul>
+    <ul class="d-none">
         <li class="{{set_active('forms*')}}">
             <a href="{{route('forms.index')}}">
                 <span class="icon material-icons md-light">list_alt</span>
@@ -121,8 +121,8 @@
     </ul>
     
     <ul class="d-none">
-        <li class="{{set_active('users*')}}">
-            <a href="{{route('users.index')}}">
+        <li class="#"> <?php //{{set_active('users*')}} ?>
+            <a href="#"> <?php //{{route('users.index')}} ?>
                 <span class="icon material-icons md-light">person_outline</span>
                 <span class="title-bar">Users</span>
             </a>

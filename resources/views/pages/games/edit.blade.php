@@ -36,28 +36,32 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group">
-                <label for="file">Gambar</label>
-                <input type="file" class="form-control" id="file" name="file" aria-describedby="file">
-            </div>
-            <div class="form-group">
-                <label for="filelogo">Logo Game</label>
-                <input type="file" class="form-control" id="filelogo" name="filelogo" aria-describedby="filelogo">
-            </div>
-            @if(!empty($games->image_game))
-            <div class="form-group">
-                <div class="show-image d-inline-block" id="show-image" style="width: 150px; height: auto;">
-                    <img src='{{url("uploads/$games->image_game")}}' class="img-fluid img-thumbnail" />
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="file">Gambar</label>
+                    <input type="file" class="form-control" id="file" name="file" aria-describedby="file">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="filelogo">Logo Game</label>
+                    <input type="file" class="form-control" id="filelogo" name="filelogo" aria-describedby="filelogo">
                 </div>
             </div>
-            @endif
-            @if(!empty($games->logo_game))
-            <div class="form-group">
-                <div class="show-image d-inline-block" id="show-image" style="width: 150px; height: auto;">
-                    <img src='{{url("uploads/$games->logo_game")}}' class="img-fluid img-thumbnail" />
+            <div class="row">
+                @if(!empty($games->image_game))
+                <div class="form-group col-md-6">
+                    <div class="show-image d-inline-block" id="show-image" style="width: 150px; height: auto;">
+                        <img src='{{url("uploads/$games->image_game")}}' class="img-fluid img-thumbnail" />
+                    </div>
                 </div>
+                @endif
+                @if(!empty($games->logo_game))
+                <div class="form-group col-md-6">
+                    <div class="show-image d-inline-block" id="show-image" style="width: 150px; height: auto;">
+                        <img src='{{url("uploads/$games->logo_game")}}' class="img-fluid img-thumbnail" />
+                    </div>
+                </div>
+                @endif
             </div>
-            @endif
             <div class="button-grup">
                 <a href="{{route('games')}}" class="btn btn-danger m-1">Back</a>
                 <button type="submit" class="btn btn-primary m-1">Save</button>

@@ -5,7 +5,7 @@
     <div id="owl-carousel" class="owl-carousel owl-theme">
         @foreach($events as $event)
         <div class="item">
-            <a href="{{url('dasboard/event/'.$event->slug)}}" target="_blank" rel="noopener noreferrer">
+            <a href="{{url('dashboard/event/'.$event->slug)}}" target="_blank" rel="noopener noreferrer">
                 <img class="owl-lazy img-responsive" data-src="{{url('uploads/'.$event->file)}}" alt="Image" height="220">
             </a>
         </div>

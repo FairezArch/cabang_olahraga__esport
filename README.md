@@ -60,3 +60,24 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+Perbaikan function create di club var users di ganti
+
+Pembuatan if untuk query jika itu superadmin /club/pengurus di controller clubs index = sudah
+
+Pembuatan query untuk owner vlub dan pengurus di info club di menu profile = di ganti menu club
+
+Pembuatan join event pertandingan. Alur: ownerclub/pengurus klik banner event setelah lihat detail ada tombol untuk join event-> klik untuk daftar{list team dalam club} - > klik join event. nb: team hanya satu = sudah
+
+Approval altet tidak ada. Karena daftar langsung di pos terdekat. Maksudnya daftar manual tidak otomatis via web = sudah
+
+Pembuatan event dalam satu club. Yang event organisasi di ubah ke club
+
+permission role untuk management dan owner club sama = sudah
+
+form sementara di hidden dlu karena blum ada progress lanjut
+
+pemimpin club hanya bisa memiliki satu club sudah
+
+pending untuk view detail terutama club team dll

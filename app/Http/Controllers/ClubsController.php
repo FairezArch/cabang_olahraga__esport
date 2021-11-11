@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\Club;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use DB;
 use App\Models\Branchsport;
-
+use App\Models\User;
+use App\Models\Club;
+use App\Models\Organization;
 
 class ClubsController extends Controller
 {
@@ -28,7 +28,21 @@ class ClubsController extends Controller
     public function index()
     {
         //
-        $lists = Club::where('cabang_id', auth::user()->cabang_id)->paginate(5);
+        $modelrole = DB::table('model_has_roles')->where('model_id',auth()->user()->id)->first();
+
+        # For remember this controller set by role permission for query
+        if( $modelrole->role_id == 3 ){
+            $lists = Club::where('cabang_id', auth::user()->cabang_id)->where('iduser',auth()->user()->id)->paginate(5);
+        }else if( $modelrole->role_id == 4 ){
+            $lists = DB::table('origanizations')
+                ->join('clubs','origanizations.club_id','clubs.id')
+                ->select('clubs.*','origanizations.*')
+                ->where('origanizations.user_id',auth()->user()->id)->paginate(5);
+        }else{
+            $lists = Club::where('cabang_id', auth::user()->cabang_id)->paginate(5);
+        }
+
+        // return dd(auth()->user()->id); 
         return view('pages.clubs.index', compact('lists'));
     }
 

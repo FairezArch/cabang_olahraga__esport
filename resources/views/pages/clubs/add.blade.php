@@ -28,20 +28,22 @@
                 <label for="desc">Diskripsi</label>
                 <textarea id="desc" class="form-control" name="desc" cols="30" rows="10"></textarea>
             </div>
-            <div class="form-group">
-                <label for="cover">Gambar</label>
-                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file">
-                @error('file')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-            <div class="form-group">
-                <label for="branch">Cabang</label>
-                <select name="branch" id="branch" class="form-control">
-                    @foreach($branchs as $branch)
-                    <option value="{{$branch->id}}">{{$branch->name}}</option>
-                    @endforeach
-                </select>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="cover">Gambar</label>
+                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file">
+                    @error('file')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="branch">Cabang</label>
+                    <select name="branch" id="branch" class="form-control">
+                        @foreach($branchs as $branch)
+                        <option value="{{$branch->id}}">{{$branch->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
             <div class="button-grup">
                 <a href="{{route('clubs.index')}}" class="btn btn-danger m-1">Back</a>

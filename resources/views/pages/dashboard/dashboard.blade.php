@@ -5,7 +5,7 @@
     <div id="owl-carousel" class="owl-carousel owl-theme">
         @foreach($events as $event)
         <div class="item">
-            <a href="{{url('dasboard/event/'.$event->slug)}}" target="_blank" rel="noopener noreferrer">
+            <a href="{{url('dashboard/event/'.$event->slug)}}" target="_blank" rel="noopener noreferrer">
                 <img class="owl-lazy img-responsive" data-src="{{url('uploads/'.$event->file)}}" alt="Image" height="220">
             </a>
         </div>
@@ -17,7 +17,7 @@
     <div id="owl-carousel-games" class="owl-carousel owl-theme">
         @foreach($games as $game)
         <div>
-            <a href="{{url('dasboard/game/'.$game->slug)}}" target="_blank" rel="noopener noreferrer">
+            <a href="{{url('dashboard/game/'.$game->slug)}}" target="_blank" rel="noopener noreferrer">
                 <img class="owl-lazy img-responsive clopimg" data-src="{{url('uploads/'.$game->image_game)}}" alt="Image" height="220">
             </a>
         </div>
@@ -32,7 +32,7 @@
             <div id="owl-carousel-awards" class="owl-carousel owl-theme">
                 @foreach($awards as $award)
                 <div>
-                    <a href="{{url('dasboard/award/'.$award->slug)}}" target="_blank" rel="noopener noreferrer">
+                    <a href="{{url('dashboard/award/'.$award->slug)}}" target="_blank" rel="noopener noreferrer">
                         <img class="owl-lazy img-responsive clopimg" data-src="{{url('uploads/'.$award->award_logo)}}" alt="Image" height="220">
                     </a>
                 </div>

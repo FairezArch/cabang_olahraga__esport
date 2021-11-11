@@ -45,11 +45,12 @@ Route::group(['middleware' => 'auth'], function () {
     
     Route::group(['middleware' => ['permission:dashboards']], function(){
         Route::get('dashboard',[DashboardController::class,'index'])->name('dashboard');
-        Route::get('dasboard/event/{slug}',[DashboardController::class,'eventview']);
-        Route::get('dasboard/game/{slug}',[DashboardController::class,'gameview']);
-        Route::get('dasboard/award/{slug}',[DashboardController::class,'awardview']);
+        Route::get('dashboard/event/{slug}',[DashboardController::class,'eventview']);
+        Route::get('dashboard/game/{slug}',[DashboardController::class,'gameview']);
+        Route::get('dashboard/award/{slug}',[DashboardController::class,'awardview']);
         Route::get('dashboard/joinClub/{slug}',[DashboardController::class,'joinclub']);
         Route::post('dashboard/joinClub/{slug}/insert',[DashboardController::class,'joinclubInsert']);
+        Route::post('dashboard/event/{slug}/joinevent',[DashboardController::class,'joinevent']);
     });
     
     Route::group(['middleware' => 'role:superadmin'], function(){
@@ -90,7 +91,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('games/{id}/delete',[GamesController::class,'destroy'])->name('games.delete');
     });
 
-    Route::group(['middleware' => ['permission:members-list|members-create|members-edit|members-delete']], function(){
+    Route::group(['middleware' => ['permission:clubs-edit|atlet-list|atlet-create|atlet-edit|atlet-delete']], function(){
         Route::get('clubs/{club_id}/members/mail',[MembersController::class,'mail']);
         Route::post('clubs/{club_id}/members/mailsend',[MembersController::class,'sendmail']);
         
@@ -111,7 +112,7 @@ Route::group(['middleware' => 'auth'], function () {
         
     });
 
-    Route::group(['middleware' => ['permission:teams-list|teams-create|teams-edit|teams-delete']], function(){
+    Route::group(['middleware' => ['permission:clubs-edit|teams-list|teams-create|teams-edit|teams-delete']], function(){
         Route::get('clubs/{club_id}/teams',[TeamsController::class,'index']);
         Route::get('clubs/{club_id}/teams/create',[TeamsController::class,'create']);
         Route::post('clubs/{club_id}/teams/store',[TeamsController::class,'store']);
@@ -156,7 +157,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
     Route::get('infoclub',[InfoClubController::class,'index']);
     Route::resource('forms',HeaderFormController::class);
-    Route::group(['middleware' => ['permission:users-list|users-create|users-edit|users-delete']], function(){
-        Route::resource('users',UsersNoMember::class);
-    });
+    // Route::group(['middleware' => ['permission:users-list|users-create|users-edit|users-delete']], function(){
+    //     Route::resource('users',UsersNoMember::class);
+    // });
 });

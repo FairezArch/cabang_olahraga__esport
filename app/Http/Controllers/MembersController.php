@@ -20,7 +20,7 @@ class MembersController extends Controller
     public function __construct()
     {
         # code...
-        $this->middleware(['permission:members-list|members-create|members-edit|members-delete']);
+        $this->middleware(['permission:clubs-edit|atlet-list|atlet-create|atlet-edit|atlet-delete']);
     }
     /**
      * Display a listing of the resource.
