@@ -16,16 +16,39 @@ class InfoClubController extends Controller
     {
         # code...
         $lists = DB::table('clubs')
-                 ->join('members','clubs.id','members.club_id')
-                 ->join('users','clubs.iduser','users.id')
-                 ->leftjoin('teams','members.club_id','teams.club_id')
-                 ->select('members.id as member_id','clubs.iduser as id_userclub','clubs.club_name','clubs.file as club_file','clubs.description as club_desc','teams.team_name','teams.slogan','teams.desc as team_desc','teams.file as team_file','teams.members','teams.leader_team','users.name as owner_name','users.lastname as owner_lastname')
-                 ->where('members.iduser',auth()->user()->id)
-                 ->whereNull('members.deleted_at')
-                 ->get();
-        $users = User::where('id',auth()->user()->id)->get();
+            ->join('members', 'clubs.id', 'members.club_id')
+            ->join('users', 'clubs.iduser', 'users.id')
+            ->leftjoin('teams', 'members.club_id', 'teams.club_id')
+            ->select('members.id as member_id', 'clubs.iduser as id_userclub', 'clubs.club_name', 'clubs.file as club_file', 'clubs.description as club_desc', 'teams.team_name', 'teams.slogan', 'teams.desc as team_desc', 'teams.file as team_file', 'teams.members', 'teams.leader_team', 'users.name as owner_name', 'users.lastname as owner_lastname')
+            ->where('members.iduser', auth()->user()->id)
+            ->whereNull('members.deleted_at')
+            ->get();
+        $users = User::where('id', auth()->user()->id)->get();
         // return dd($lists);
-       
-        return view('pages.infoclub.index',compact('lists','users'));
+
+        return view('pages.infoclub.index', compact('lists', 'users'));
+    }
+
+    public function indexOwner()
+    {
+        // $lists = DB::table('clubs')
+        //     ->join('members', 'clubs.id', 'members.club_id')
+        //     ->join('users', 'clubs.iduser', 'users.id')
+        //     ->leftjoin('teams', 'members.club_id', 'teams.club_id')
+        //     ->select('members.id as member_id', 'clubs.iduser as id_userclub', 'clubs.club_name', 'clubs.file as club_file', 'clubs.description as club_desc', 'teams.team_name', 'teams.slogan', 'teams.desc as team_desc', 'teams.file as team_file', 'teams.members', 'teams.leader_team', 'users.name as owner_name', 'users.lastname as owner_lastname')
+        //     ->where('members.iduser', auth()->user()->id)
+        //     ->whereNull('members.deleted_at')
+        //     ->get();
+
+        $listsClub = DB::table('clubs')
+            ->join('teams', 'clubs.id', 'teams.club_id')
+            ->join('origanizations', 'clubs.id', 'origanizations.club_id')
+            ->join('users', 'clubs.iduser', 'users.id')
+            ->join('origanizations','users.id','origanizations.user_id')
+            ->select('')
+            ->where('clubs.iduser', auth()->user()->id);
+        //buat routenya
+
+        return view('pages.infoclub.indexOwner', compact('lists', 'users'));
     }
 }

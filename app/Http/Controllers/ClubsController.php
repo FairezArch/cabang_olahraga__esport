@@ -42,7 +42,7 @@ class ClubsController extends Controller
         //
         $users = DB::table('users')->join('model_has_roles', 'users.id', 'model_has_roles.model_id')
             ->select('users.*', 'model_has_roles.role_id', 'model_has_roles.model_id')
-            ->where('model_has_roles.role_id', 3)->paginate(5);
+            ->where('model_has_roles.role_id', 3)->get();
         $branchs = Branchsport::get();
         return view('pages.clubs.add', compact('users', 'branchs'));
     }
@@ -114,7 +114,9 @@ class ClubsController extends Controller
     {
 
         $club = Club::find($id);
-        $users = User::where('active', 1)->get();
+        $users = DB::table('users')->join('model_has_roles', 'users.id', 'model_has_roles.model_id')
+        ->select('users.*', 'model_has_roles.role_id', 'model_has_roles.model_id')
+        ->where('model_has_roles.role_id', 3)->get();
         $branchs = Branchsport::get();
         return view('pages.clubs.edit', compact('club', 'users', 'branchs'));
     }
